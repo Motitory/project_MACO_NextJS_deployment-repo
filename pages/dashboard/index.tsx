@@ -15,6 +15,7 @@ import DashboardDirectControl from './DashboardDirectControl';
 import DashboardSchedule from './DashboardSchedule';
 import DashboardChart from './DashboardChart';
 import DashboardOperationHistory from './DashboardOperationHistory';
+import GrowthRateChart from './statistic/EnvironmentGrowChart';
 
 export default function ControlView() {
   const router = useRouter();
@@ -71,7 +72,8 @@ export default function ControlView() {
             </Link>
           </div>
         </div>
-        <DashboardChart />
+        {/* <DashboardChart /> */}
+        <GrowthRateChart />
         <div className="mt-4">
           <DashboardOperationHistory />
         </div>

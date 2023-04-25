@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { AppProps } from 'next/app';
 import { SessionProvider, useSession } from 'next-auth/react';
 import NavBar from './components/navbar';
+import NavBar2 from './components/navbar2';
 import Footer from './components/footer';
 import { Suspense } from 'react';
 import MiddleSection from './middleSection';
@@ -29,7 +30,7 @@ export default function App({
   const router = useRouter();
   // const hideNavbar = router.pathname.startsWith('/boards');
 
-  const hiddenRoutes = ['/boards', '/dashboard'];
+  const hiddenRoutes = ['/boards', '/dashboard', '/sockettest'];
   const hideNavbar = hiddenRoutes.some((route) =>
     router.pathname.startsWith(route)
   );
@@ -66,7 +67,7 @@ export default function App({
         <Suspense fallback={<div>Loading...</div>}></Suspense>
         <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
         {/* <NavBar weather={weatherData} address={addressData?.address} /> */}
-        {!hideNavbar && <NavBar />}
+        {hideNavbar ? <NavBar2 /> : <NavBar />}
         <Component {...pageProps} />
         {/* <Footer /> */}
         {/* </ParallaxProvider> */}

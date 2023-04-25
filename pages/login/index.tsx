@@ -44,6 +44,7 @@ export default function Login() {
                 })
                 .then(() => {
                   router.replace('/');
+                  // router.reload();
                 })
                 .catch(() => {
                   mainRequest
