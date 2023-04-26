@@ -1,10 +1,10 @@
+import { useAuth } from '@/contexts/AuthContext';
 import { kakaoInit } from '@/utils/kakao/kakaoinit';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
-// import logo from '@/public/maco_logo.jpg';
 
 const Navbar = styled.nav`
   position: fixed;
@@ -53,61 +53,37 @@ const NavLink = styled.a`
   writing-mode: horizontal-tb;
 `;
 
-const LOGOUT_URL = 'http://localhost:8000/auth/logout';
+// const LOGIN_URL = 'http://localhost:8000/auth/login';
+// const LOGOUT_URL = 'http://localhost:8000/auth/logout';
 
 const Page = () => {
   const router = useRouter();
-  const [userName, setUserName] = useState<string | null>(null);
+  const { state, logout } = useAuth();
+  const userName = state.userName;
 
-  const logout = () => {
-    axios
-      .post(LOGOUT_URL)
-      .then(() => {
-        //어차피 kakao-refresh-token을 받아오지 않으니까 localStorage안에 들어있는 값은 새로고침 시 없어지니까
-        // 로컬에서 refresh-token을 발급 받은 걸 사용하면 된다.
-        localStorage.removeItem('name');
-        localStorage.removeItem('accessToken');
-        typeof window !== 'undefined' &&
-          window.localStorage.removeItem('expirationTime');
-        window.alert('로그아웃 되었습니다.');
-        router.replace('/');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setUserName(null);
+  const handleLogout = () => {
+    const kakao = kakaoInit();
+    if (kakao && kakao.Auth.getAccessToken()) {
+      kakao.Auth.logout();
+    }
+    logout();
+    router.replace('/');
   };
 
-  useEffect(() => {
-    const name =
-      typeof window !== 'undefined' && window.localStorage.getItem('name');
-    const savedTime =
-      typeof window !== 'undefined' && window.localStorage.getItem('savedTime');
-    const now = Date.now();
-    const THIRTY_MINUTES_IN_MS = 30 * 60 * 1000;
-
-    if (name && savedTime && now - Number(savedTime) < THIRTY_MINUTES_IN_MS) {
-      setUserName(name);
-    } else {
-      window.localStorage.removeItem('name');
-      window.localStorage.removeItem('savedTime');
-    }
-    const kakao = kakaoInit();
-
-    return () => {
-      if (kakao && kakao.Auth.getAccessToken()) {
-        kakao.Auth.logout();
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   const kakao = kakaoInit();
+  //   return () => {
+  //     if (kakao && kakao.Auth.getAccessToken()) {
+  //       kakao.Auth.logout();
+  //     }
+  //   };
+  // }, []);
 
   return (
     <div>
       <Navbar>
         <NavContainer>
-          <NavLink href="/">
-            <img src="/maco_logo.jpg" alt="アグリート" className="w-48" />
-          </NavLink>
+          <NavLink href="/">アグリート</NavLink>
         </NavContainer>
         <NavLinks>
           <NavItem>
@@ -126,7 +102,7 @@ const Page = () => {
             {userName ? (
               <>
                 <div className="font-bold text-white">{`Hello, ${userName}`}</div>
-                <button className="font-bold text-white" onClick={logout}>
+                <button className="font-bold text-white" onClick={handleLogout}>
                   Sign Out
                 </button>
               </>

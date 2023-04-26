@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
+import { useAuth } from '@/contexts/AuthContext';
 import axios from 'axios';
 import Image from 'next/image';
 import loginImage from '/public/login.png';
 import Link from 'next/link';
 import mainRequest from '@/utils/request/mainReqeust';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { kakaoInit } from '@/utils/kakao/kakaoinit';
 import * as Kakao from 'kakao-sdk';
 import dynamic from 'next/dynamic';
@@ -14,6 +15,7 @@ const SERVER_URL_SIGN_UP = 'http://localhost:8000/auth/signup';
 
 export default function Login() {
   const router = useRouter();
+  const { login } = useAuth();
   const [kakao, setKakao] = useState<any>(null);
 
   useEffect(() => {
@@ -52,6 +54,7 @@ export default function Login() {
                       username: res.kakao_account.email,
                     })
                     .then(() => {
+                      login(res.properties.nickname);
                       router.replace('/');
                     })
                     .catch((err) => {
@@ -69,7 +72,7 @@ export default function Login() {
         },
       });
     }
-  }, [kakao, router]);
+  }, [kakao, router, login]);
 
   return (
     <>

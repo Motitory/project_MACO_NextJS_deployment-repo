@@ -6,7 +6,6 @@ export interface Board {
   createDate: Date;
   user: {
     id: number;
-    nickname: string;
+    nickname : string
   };
-  admin_check: boolean;
 }

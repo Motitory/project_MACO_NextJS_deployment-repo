@@ -49,6 +49,7 @@
     "react-icons": "^4.8.0",
     "react-kakao-login": "^2.1.1",
     "react-query": "^3.39.3",
+    "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.8.1",
     "react-scroll-parallax": "^3.3.2",
     "react-scroll-section": "^3.2.5",

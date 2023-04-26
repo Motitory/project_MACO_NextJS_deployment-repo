@@ -57,8 +57,8 @@ const GrowthRateChart: React.FC = () => {
   const growFilteredData = envData.filter((item) => item.grow != 0);
 
   return (
-    <div>
-      <h2 className="mb-4 mt-8 text-2xl font-bold">생장률 그래프</h2>
+    <div className="mt-4">
+      {/* <h2 className="mb-4 mt-8 text-2xl font-bold">생장 그래프</h2> */}
       <Line
         data={createChartData(
           growFilteredData,

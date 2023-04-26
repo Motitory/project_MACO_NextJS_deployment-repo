@@ -248,7 +248,7 @@ const ManualControl = () => {
           <Box marginBottom={2}>
             <TextField
               fullWidth
-              label="관수 1 시간"
+              label="관수 1 : 시간(분)"
               type="number"
               // value={state.rwtime1 || ''}
               value={state.rwtime1}
@@ -264,7 +264,7 @@ const ManualControl = () => {
           <Box marginBottom={2}>
             <TextField
               fullWidth
-              label="관수 2 시간"
+              label="관수 2 : 시간(분)"
               type="number"
               value={state.rwtime2}
               onChange={(event) => handleInputChange(event, 'rwtime2')}

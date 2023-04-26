@@ -2,6 +2,7 @@ import '@/styles/globals.css';
 import { useEffect, useState } from 'react';
 import { AppProps } from 'next/app';
 import { SessionProvider, useSession } from 'next-auth/react';
+import { AuthProvider } from '../contexts/AuthContext';
 import NavBar from './components/navbar';
 import NavBar2 from './components/navbar2';
 import Footer from './components/footer';
@@ -66,11 +67,14 @@ export default function App({
         {/* <ParallaxProvider> */}
         <Suspense fallback={<div>Loading...</div>}></Suspense>
         <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-        {/* <NavBar weather={weatherData} address={addressData?.address} /> */}
-        {hideNavbar ? <NavBar2 /> : <NavBar />}
-        <Component {...pageProps} />
-        {/* <Footer /> */}
-        {/* </ParallaxProvider> */}
+        <AuthProvider>
+          {/* <NavBar weather={weatherData} address={addressData?.address} /> */}
+          {/* {hideNavbar ? <NavBar2 /> : <NavBar />} */}
+          {hideNavbar ? <></> : <NavBar />}
+          <Component {...pageProps} />
+          {/* <Footer /> */}
+          {/* </ParallaxProvider> */}
+        </AuthProvider>
       </QueryClientProvider>
     </SessionProvider>
   );

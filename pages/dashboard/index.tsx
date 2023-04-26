@@ -15,23 +15,25 @@ import DashboardDirectControl from './DashboardDirectControl';
 import DashboardSchedule from './DashboardSchedule';
 import DashboardChart from './DashboardChart';
 import DashboardOperationHistory from './DashboardOperationHistory';
-import GrowthRateChart from './statistic/EnvironmentGrowChart';
+import GrowthRateChart from '../components/EnvironmentGrowChart';
+import SocketGrowImage from '../components/SocketGrowImage';
+import RecommendedValues from '@/pages/components/RecommendedValues';
 
 export default function ControlView() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
 
-  useEffect(() => {
-    if (
-      localStorage.getItem('kakao-Name') !== 'undefined' ||
-      localStorage.getItem('name')
-    ) {
-      console.log('사용자 있음.');
-    } else {
-      router.replace('/');
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (
+  //     localStorage.getItem('kakao-Name') !== 'undefined' ||
+  //     localStorage.getItem('name')
+  //   ) {
+  //     console.log('사용자 있음.');
+  //   } else {
+  //     // router.replace('/');
+  //   }
+  // }, []);
 
   return (
     <div className="flex h-full w-full flex-col p-4 md:flex-row">
@@ -57,7 +59,10 @@ export default function ControlView() {
       </div>
       <div className="mt-4 w-full md:mt-0 md:w-3/5">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">통계 그래프</h2>
+          <RecommendedValues />
+        </div>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">생장 그래프</h2>
           <div>
             <button
               className="mr-2 bg-orange-500 px-4 py-2 text-white"
@@ -74,10 +79,19 @@ export default function ControlView() {
         </div>
         {/* <DashboardChart /> */}
         <GrowthRateChart />
+        <div className="mt-4 flex items-center justify-between">
+          <h2 className="text-2xl font-bold">생장 과정 예측 그래프</h2>
+          <Link href="/sockettest">
+            <button className="bg-blue-500 px-4 py-2 text-white">
+              <ZoomInIcon /> 상세보기
+            </button>
+          </Link>
+        </div>
         <div className="mt-4">
-          <DashboardOperationHistory />
+          <SocketGrowImage />
         </div>
       </div>
+      {/* <DashboardOperationHistory /> */}
       {/* <button
         className="bg-blue-500 px-4 py-2 text-white"
         onClick={() => setIsModalOpen(true)}
