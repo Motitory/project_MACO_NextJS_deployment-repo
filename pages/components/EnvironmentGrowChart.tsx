@@ -27,6 +27,7 @@ const createChartData = (
     labels,
     datasets: [
       {
+        label: '길이 (cm)',
         data: chartData,
         borderColor,
         borderWidth: 1,
@@ -58,7 +59,9 @@ const GrowthRateChart: React.FC = () => {
 
   return (
     <div className="mt-4">
-      {/* <h2 className="mb-4 mt-8 text-2xl font-bold">생장 그래프</h2> */}
+      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-yellow-300 bg-green-200 p-2 text-2xl font-bold">
+        생장 그래프
+      </h2>
       <Line
         data={createChartData(
           growFilteredData,
@@ -68,7 +71,9 @@ const GrowthRateChart: React.FC = () => {
         options={{
           plugins: {
             legend: {
-              display: false,
+              labels: {
+                color: 'rgba(0, 0, 0, 0.8)',
+              },
             },
             tooltip: {
               callbacks: {

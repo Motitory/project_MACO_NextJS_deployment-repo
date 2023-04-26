@@ -1,134 +1,108 @@
-import React, { useEffect, useState } from 'react';
-import { Line } from 'react-chartjs-2';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import axios from 'axios';
-import 'chart.js/auto';
-import authRequest from '@/utils/request/authRequest';
+import React, { useState } from 'react';
+import TemperatureChart from '@/pages/components/TemperatureChart';
+import HumidityChart from '@/pages/components/HumidityChart';
+import EnvironmentGrowChart from '@/pages/components/EnvironmentGrowChart';
+import SocketGrowChart from '@/pages/components/SocketGrowChart';
+import SocketAppleChart from '@/pages/components/SocketAppleChart';
+import SocketPearChart from '@/pages/components/SocketPearChart';
 
-interface EnvironmentData {
-  id: number;
-  temperature: number;
-  humidity: number;
-  soil_humid: number;
-  grow: number;
-  created_at: string;
-}
+const StatisticPage: React.FC = () => {
+  const [activeChart, setActiveChart] = useState<
+    | 'temperature'
+    | 'humidity'
+    | 'EnvironmentGrow'
+    | 'SocketGrow'
+    | 'SocketApple'
+    | 'SocketPear'
+  >('temperature');
 
-const getBackgroundColor = (
-  dateString: string,
-  amColor: string,
-  pmColor: string
-) => {
-  const date = new Date(dateString);
-  const hour = date.getHours();
-  return hour >= 0 && hour < 12 ? amColor : pmColor;
-};
-
-const createChartData = (
-  data: EnvironmentData[],
-  dataKey: keyof EnvironmentData,
-  borderColor: string
-) => {
-  const labels = data.map((item) => item.created_at);
-  const chartData = data.map((item) => item[dataKey]);
-  const backgroundColors = data.map((item) =>
-    getBackgroundColor(
-      item.created_at,
-      'rgba(212, 229, 60, 0.7)',
-      'rgba(98, 91, 178, 0.7)'
-    )
-  );
-
-  return {
-    labels,
-    datasets: [
-      {
-        data: chartData,
-        backgroundColor: backgroundColors,
-        borderColor,
-        borderWidth: 1,
-        fill: false,
-      },
-    ],
-  };
-};
-
-const EnvironmentGrowthChart: React.FC = () => {
-  const [envData, setEnvData] = useState<EnvironmentData[]>([]);
-  const [chartIndex, setChartIndex] = useState(0);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await authRequest.get<EnvironmentData[]>(
-          `http://localhost:8000/envir`
-        );
-        setEnvData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const recentEnvData = envData.slice(-24);
-
-  type ChartInfo = {
-    title: string;
-    key: keyof EnvironmentData;
-    borderColor: string;
-  };
-
-  const charts: ChartInfo[] = [
-    {
-      title: '온도',
-      key: 'temperature',
-      borderColor: 'rgba(255, 159, 64, 1)',
-    },
-    {
-      title: '습도',
-      key: 'humidity',
-      borderColor: 'rgba(100, 149, 237, 1)',
-    },
-  ];
-
-  const growFilteredData = envData.filter((item) => item.grow != 0);
-
-  const incrementChartIndex = () => {
-    setChartIndex((prevIndex) => (prevIndex + 1) % charts.length);
-  };
-
-  const decrementChartIndex = () => {
-    setChartIndex(
-      (prevIndex) => (prevIndex - 1 + charts.length) % charts.length
-    );
+  const handleClick = (
+    chart:
+      | 'temperature'
+      | 'humidity'
+      | 'EnvironmentGrow'
+      | 'SocketGrow'
+      | 'SocketApple'
+      | 'SocketPear'
+  ) => {
+    setActiveChart(chart);
   };
 
   return (
-    <div>
-      <h2 className="mb-4 text-2xl font-bold">{charts[chartIndex].title}</h2>
-      <div className="flex items-center justify-between">
-        <FaArrowLeft onClick={decrementChartIndex} />
-        <Line
-          data={createChartData(
-            recentEnvData,
-            charts[chartIndex].key,
-            charts[chartIndex].borderColor
-          )}
-        />
-        <FaArrowRight onClick={incrementChartIndex} />
+    <div className="flex">
+      <div className="w-3/4">
+        {activeChart === 'temperature' && <TemperatureChart />}
+        {activeChart === 'humidity' && <HumidityChart />}
+        {activeChart === 'EnvironmentGrow' && <EnvironmentGrowChart />}
+        {activeChart === 'SocketGrow' && <SocketGrowChart />}
+        {activeChart === 'SocketApple' && <SocketAppleChart />}
+        {activeChart === 'SocketPear' && <SocketPearChart />}
       </div>
-      <h2 className="mb-4 mt-8 text-2xl font-bold">생장률 그래프</h2>
-      <Line
-        data={createChartData(
-          growFilteredData,
-          'grow',
-          'rgba(75, 192, 192, 1)'
-        )}
-      />
+      <div className="flex w-1/4 flex-col items-center bg-gray-100 p-4">
+        <h2 className="mb-16 text-2xl font-bold">차트 선택</h2>
+        <button
+          onClick={() => handleClick('temperature')}
+          className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
+            activeChart === 'temperature'
+              ? 'bg-blue-500'
+              : 'bg-blue-300 hover:bg-blue-400'
+          }`}
+        >
+          온도 차트
+        </button>
+        <button
+          onClick={() => handleClick('humidity')}
+          className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
+            activeChart === 'humidity'
+              ? 'bg-green-500'
+              : 'bg-green-300 hover:bg-green-400'
+          }`}
+        >
+          습도 차트
+        </button>
+        <button
+          onClick={() => handleClick('EnvironmentGrow')}
+          className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
+            activeChart === 'EnvironmentGrow'
+              ? 'bg-purple-500'
+              : 'bg-purple-300 hover:bg-purple-400'
+          }`}
+        >
+          생장 차트
+        </button>
+        <button
+          onClick={() => handleClick('SocketGrow')}
+          className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
+            activeChart === 'SocketGrow'
+              ? 'bg-red-500'
+              : 'bg-red-300 hover:bg-red-400'
+          }`}
+        >
+          생장 과정 예측 차트
+        </button>
+        <button
+          onClick={() => handleClick('SocketApple')}
+          className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
+            activeChart === 'SocketApple'
+              ? 'bg-yellow-500'
+              : 'bg-yellow-300 hover:bg-yellow-400'
+          }`}
+        >
+          사과 가격 예측 차트
+        </button>
+        <button
+          onClick={() => handleClick('SocketPear')}
+          className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
+            activeChart === 'SocketPear'
+              ? 'bg-indigo-500'
+              : 'bg-indigo-300 hover:bg-indigo-400'
+          }`}
+        >
+          배 가격 예측 차트
+        </button>
+      </div>
     </div>
   );
 };
 
-export default EnvironmentGrowthChart;
+export default StatisticPage;

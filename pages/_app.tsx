@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import '@/styles/custom.css';
 import 'react-datepicker/dist/react-datepicker.css';
 // import { ParallaxProvider } from 'react-scroll-parallax';
 // import { getUserLocation } from '../utils/getUserLocation';

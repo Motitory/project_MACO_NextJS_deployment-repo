@@ -16,7 +16,7 @@ import DashboardSchedule from './DashboardSchedule';
 import DashboardChart from './DashboardChart';
 import DashboardOperationHistory from './DashboardOperationHistory';
 import GrowthRateChart from '../components/EnvironmentGrowChart';
-import SocketGrowImage from '../components/SocketGrowImage';
+import SocketGrowImage from '../components/SocketGrowChart';
 import RecommendedValues from '@/pages/components/RecommendedValues';
 
 export default function ControlView() {
@@ -62,7 +62,7 @@ export default function ControlView() {
           <RecommendedValues />
         </div>
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">생장 그래프</h2>
+          <h2 className="text-2xl font-bold">통계</h2>
           <div>
             <button
               className="mr-2 bg-orange-500 px-4 py-2 text-white"
@@ -70,7 +70,7 @@ export default function ControlView() {
             >
               <FontAwesomeIcon icon={faVideo} /> 실시간 보기
             </button>
-            <Link href="/dashboard/RecentSevenDays">
+            <Link href="/statistic">
               <button className="bg-blue-500 px-4 py-2 text-white">
                 <ZoomInIcon /> 상세보기
               </button>
@@ -80,7 +80,7 @@ export default function ControlView() {
         {/* <DashboardChart /> */}
         <GrowthRateChart />
         <div className="mt-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">생장 과정 예측 그래프</h2>
+          <h2 className="text-2xl font-bold">AI 예측 그래프</h2>
           <Link href="/sockettest">
             <button className="bg-blue-500 px-4 py-2 text-white">
               <ZoomInIcon /> 상세보기
