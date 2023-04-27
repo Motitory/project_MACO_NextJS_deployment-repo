@@ -32,7 +32,7 @@ export default function App({
   const router = useRouter();
   // const hideNavbar = router.pathname.startsWith('/boards');
 
-  const hiddenRoutes = ['/boards', '/dashboard', '/sockettest'];
+  const hiddenRoutes = ['/boards', '/dashboard', '/sockettest', '/statistic'];
   const hideNavbar = hiddenRoutes.some((route) =>
     router.pathname.startsWith(route)
   );
@@ -70,8 +70,8 @@ export default function App({
         <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
         <AuthProvider>
           {/* <NavBar weather={weatherData} address={addressData?.address} /> */}
-          {/* {hideNavbar ? <NavBar2 /> : <NavBar />} */}
-          {hideNavbar ? <></> : <NavBar />}
+          {hideNavbar ? <NavBar2 /> : <NavBar />}
+          {/* {hideNavbar ? <></> : <NavBar />} */}
           <Component {...pageProps} />
           {/* <Footer /> */}
           {/* </ParallaxProvider> */}

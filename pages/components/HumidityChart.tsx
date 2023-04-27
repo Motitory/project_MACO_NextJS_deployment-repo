@@ -79,7 +79,7 @@ const HumidityChart: React.FC = () => {
 
   return (
     <div>
-      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-green-300 bg-blue-200 p-2 text-2xl font-bold">
+      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-green-300 bg-green-200 p-2 text-2xl font-bold">
         습도 그래프
       </h2>
       <Line data={chartData} />

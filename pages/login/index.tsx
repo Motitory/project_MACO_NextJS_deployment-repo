@@ -55,6 +55,7 @@ export default function Login() {
                     })
                     .then(() => {
                       login(res.properties.nickname);
+                      alert('로그인 되었습니다.');
                       router.replace('/');
                     })
                     .catch((err) => {
@@ -76,8 +77,8 @@ export default function Login() {
 
   return (
     <>
-      <div className="flex h-screen items-center justify-center bg-smoke-light">
-        <div className="mx-auto max-w-md rounded bg-gray-200 p-8 shadow-2xl">
+      <div className="flex h-screen items-center justify-center bg-gray-700">
+        <div className="mx-auto max-w-md rounded-lg bg-white p-8 shadow-xl">
           <div className="mb-8 flex w-full justify-center">
             <Image
               src={loginImage}
@@ -89,7 +90,7 @@ export default function Login() {
           </div>
           <div className="text-center">
             <button
-              className="rounded border border-yellow-600 bg-yellow-500 py-2 px-4 font-bold text-white hover:border-yellow-800 hover:bg-yellow-600"
+              className="rounded border border-yellow-600 bg-yellow-500 py-2 px-4 font-bold text-white transition duration-200 ease-in-out hover:border-yellow-800 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-opacity-50"
               onClick={kakaoLogin}
             >
               카카오로그인

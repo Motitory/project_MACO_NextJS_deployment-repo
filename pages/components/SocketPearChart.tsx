@@ -17,7 +17,7 @@ const SocketAppleChart: React.FC = () => {
 
   return (
     <div>
-      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-purple-300 bg-red-200 p-2 text-2xl font-bold">
+      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-purple-300 bg-sky-200 p-2 text-2xl font-bold">
         배 가격 예측 그래프
       </h2>
       <img src={`data:image/png;base64,${data.image}`} alt="배 가격 예측" />

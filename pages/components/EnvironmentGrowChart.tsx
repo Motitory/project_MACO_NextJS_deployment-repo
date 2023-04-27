@@ -59,7 +59,7 @@ const GrowthRateChart: React.FC = () => {
 
   return (
     <div className="mt-4">
-      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-yellow-300 bg-green-200 p-2 text-2xl font-bold">
+      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-yellow-300 bg-emerald-200 p-2 text-2xl font-bold">
         생장 그래프
       </h2>
       <Line

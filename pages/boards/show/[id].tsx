@@ -6,6 +6,7 @@ import { Board } from '../interface/board';
 
 const ShowBoard = () => {
   const [board, setBoard] = useState<Board | null>(null);
+  const [id, setId] = useState<number | null>(null);
   const router = useRouter();
 
   const showBoard = async (boardId: number) => {
@@ -14,8 +15,37 @@ const ShowBoard = () => {
         `http://localhost:8000/boards/${boardId}`
       );
       setBoard(response.data);
+      getUser();
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const getUser = async () => {
+    try {
+      const response = await authRequest.get('http://localhost:8000/auth');
+      setId(response.data.id);
+      return response.data;
+    } catch (error) {
+      console.log('getUser 에러');
+    }
+  };
+
+  const handleEditClick = () => {
+    if (board?.user.id === id) {
+      router.push(`/boards/edit/${board.id}`);
+    } else {
+      window.alert('권한이 없습니다.');
+      router.back();
+    }
+  };
+
+  const handleDeleteClick = () => {
+    if (board?.user.id === id) {
+      deleteBoard();
+    } else {
+      window.alert('권한이 없습니다.');
+      router.back();
     }
   };
 
@@ -49,17 +79,22 @@ const ShowBoard = () => {
             </div>
             <div className="mb-8">
               <p className="text-sm text-gray-500">내용</p>
-              <p className="text-lg text-black">{board.description}</p>
+              <textarea
+                className="h-56 w-full resize-none rounded-lg border border-gray-300 p-2 text-lg text-black"
+                readOnly
+                value={board.description}
+                style={{ width: '100%' }}
+              />
             </div>
             <div className="flex space-x-4">
-              <Link
+              <button
+                onClick={handleEditClick}
                 className="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                href={`/boards/edit/${board.id}`}
               >
                 수정
-              </Link>
+              </button>
               <button
-                onClick={deleteBoard}
+                onClick={handleDeleteClick}
                 className="cursor-pointer rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
               >
                 삭제

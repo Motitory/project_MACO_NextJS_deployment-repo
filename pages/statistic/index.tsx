@@ -38,14 +38,16 @@ const StatisticPage: React.FC = () => {
         {activeChart === 'SocketApple' && <SocketAppleChart />}
         {activeChart === 'SocketPear' && <SocketPearChart />}
       </div>
-      <div className="flex w-1/4 flex-col items-center bg-gray-100 p-4">
-        <h2 className="mb-16 text-2xl font-bold">차트 선택</h2>
+      <div className="flex w-1/4 flex-col items-center bg-slate-50 p-4">
+        <h2 className="my-8 rounded border-2 border-gray-300 text-2xl font-bold">
+          차트 선택
+        </h2>
         <button
           onClick={() => handleClick('temperature')}
           className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
             activeChart === 'temperature'
-              ? 'bg-blue-500'
-              : 'bg-blue-300 hover:bg-blue-400'
+              ? 'bg-lime-500'
+              : 'bg-lime-300 hover:bg-lime-400'
           }`}
         >
           온도 차트
@@ -64,8 +66,8 @@ const StatisticPage: React.FC = () => {
           onClick={() => handleClick('EnvironmentGrow')}
           className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
             activeChart === 'EnvironmentGrow'
-              ? 'bg-purple-500'
-              : 'bg-purple-300 hover:bg-purple-400'
+              ? 'bg-emerald-500'
+              : 'bg-emerald-300 hover:bg-emerald-400'
           }`}
         >
           생장 차트
@@ -74,8 +76,8 @@ const StatisticPage: React.FC = () => {
           onClick={() => handleClick('SocketGrow')}
           className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
             activeChart === 'SocketGrow'
-              ? 'bg-red-500'
-              : 'bg-red-300 hover:bg-red-400'
+              ? 'bg-teal-500'
+              : 'bg-teal-300 hover:bg-teal-400'
           }`}
         >
           생장 과정 예측 차트
@@ -84,8 +86,8 @@ const StatisticPage: React.FC = () => {
           onClick={() => handleClick('SocketApple')}
           className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
             activeChart === 'SocketApple'
-              ? 'bg-yellow-500'
-              : 'bg-yellow-300 hover:bg-yellow-400'
+              ? 'bg-cyan-500'
+              : 'bg-cyan-300 hover:bg-cyan-400'
           }`}
         >
           사과 가격 예측 차트
@@ -94,8 +96,8 @@ const StatisticPage: React.FC = () => {
           onClick={() => handleClick('SocketPear')}
           className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
             activeChart === 'SocketPear'
-              ? 'bg-indigo-500'
-              : 'bg-indigo-300 hover:bg-indigo-400'
+              ? 'bg-sky-500'
+              : 'bg-sky-300 hover:bg-sky-400'
           }`}
         >
           배 가격 예측 차트

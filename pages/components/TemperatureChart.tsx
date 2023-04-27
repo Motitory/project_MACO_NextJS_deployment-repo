@@ -100,7 +100,7 @@ const TemperatureChart: React.FC = () => {
 
   return (
     <div>
-      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-blue-300 bg-pink-200 p-2 text-2xl font-bold">
+      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-blue-300 bg-lime-200 p-2 text-2xl font-bold">
         온도 그래프
       </h2>
       <Line

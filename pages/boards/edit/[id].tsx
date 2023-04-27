@@ -34,6 +34,12 @@ const EditBoard = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (board?.user.id !== id) {
+      window.alert('권한이 없습니다.');
+      router.back();
+      return;
+    }
+
     try {
       const response = await authRequest.patch(
         `http://localhost:8000/boards/${board?.id}`,
@@ -80,6 +86,13 @@ const EditBoard = () => {
   };
 
   const handleManagerSubmit = async () => {
+    // 관리자 아이디와 다를 때
+    if (id !== 2) {
+      window.alert('관리자 권한이 없습니다.');
+      router.back();
+      return;
+    }
+
     try {
       const response = await authRequest.patch(
         `http://localhost:8000/boards/${board?.id}`,
@@ -119,6 +132,7 @@ const EditBoard = () => {
                 value={description}
                 onChange={handleDescriptionChange}
                 className="h-56 w-full resize-none rounded-lg border border-gray-300 p-2"
+                style={{ width: '100%' }}
               />
             </div>
             <div className="flex justify-end">

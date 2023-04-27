@@ -21,8 +21,23 @@ import RecommendedValues from '@/pages/components/RecommendedValues';
 
 export default function ControlView() {
   const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
+  const [isMeasuringLength, setIsMeasuringLength] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    // setIsMeasuringLength(false);
+  };
+
+  const toggleVideo = () => {
+    setIsMeasuringLength(!isMeasuringLength);
+    setIsVideoLoading(true);
+  };
 
   // useEffect(() => {
   //   if (
@@ -66,7 +81,7 @@ export default function ControlView() {
           <div>
             <button
               className="mr-2 bg-orange-500 px-4 py-2 text-white"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setOpenModal(true)}
             >
               <FontAwesomeIcon icon={faVideo} /> 실시간 보기
             </button>
@@ -99,31 +114,47 @@ export default function ControlView() {
         실시간 보기
       </button> */}
 
-      {isModalOpen && (
+      {openModal && (
         <div
           className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={() => setIsModalOpen(false)}
+          onClick={() => setOpenModal(false)}
         >
           <div
             className="w-full max-w-2xl rounded-lg bg-white p-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="mb-4 text-2xl font-bold">실시간 영상</h2>
+            <h2 className="mb-4 text-2xl font-bold">
+              {isMeasuringLength ? '길이 측정' : `실시간 영상`}
+            </h2>
             <div className="mb-4">
               {isVideoLoading && (
                 <p className="mb-2 text-center">로딩 중입니다...</p>
               )}
               <img
-                src="http://172.21.4.223:8001/video_feed"
-                alt="실시간 영상"
+                src={
+                  isMeasuringLength
+                    ? 'http://172.21.4.223:8001/size_feed'
+                    : 'http://172.21.4.223:8001/video_feed'
+                }
+                alt={isMeasuringLength ? '길이 측정' : '실시간 영상'}
                 onLoad={() => setIsVideoLoading(false)}
               />
             </div>
             <button
-              className="bg-red-600 px-4 py-2 text-white"
-              onClick={() => setIsModalOpen(false)}
+              className="mr-2 bg-red-600 px-4 py-2 text-white"
+              onClick={() => setOpenModal(false)}
             >
               닫기
+            </button>
+            <button
+              className={
+                isMeasuringLength
+                  ? 'bg-orange-600 px-4 py-2 text-white'
+                  : 'bg-pink-600 px-4 py-2 text-white'
+              }
+              onClick={toggleVideo}
+            >
+              {isMeasuringLength ? '실시간 영상 보기' : '길이 측정'}
             </button>
           </div>
         </div>

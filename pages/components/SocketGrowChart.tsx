@@ -21,7 +21,7 @@ const SocketGrowImage = () => {
 
   return (
     <div>
-      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-orange-300 bg-yellow-200 p-2 text-2xl font-bold">
+      <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-orange-300 bg-teal-200 p-2 text-2xl font-bold">
         생장 과정 그래프
       </h2>
       <img

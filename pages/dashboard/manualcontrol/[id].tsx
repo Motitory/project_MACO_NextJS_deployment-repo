@@ -107,8 +107,8 @@ const ManualControl = () => {
   const { device } = router.query;
   const [isOperating, setIsOperating] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState(false);
-  const [isVideoLoading, setIsVideoLoading] = useState(true);
-  const [isMeasuringLength, setIsMeasuringLength] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
+  const [isMeasuringLength, setIsMeasuringLength] = useState(true);
 
   const fetchMachineData = async () => {
     try {

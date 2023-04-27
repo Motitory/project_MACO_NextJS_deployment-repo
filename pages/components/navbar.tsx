@@ -1,8 +1,8 @@
-import { kakaoInit } from '@/utils/kakao/kakaoinit';
+import { useAuth } from '@/contexts/AuthContext';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 // import logo from '@/public/maco_logo.jpg';
 
@@ -20,10 +20,39 @@ const Navbar = styled.nav`
   z-index: 1;
 `;
 
+const LogoContainer = styled.div`
+  position: relative;
+  overflow: hidden;
+  width: 200px;
+  height: 120px;
+
+  @media (min-width: 768px) {
+    height: 160px;
+  }
+
+  @media (min-width: 1024px) {
+    height: 200px;
+  }
+`;
+
 const Logo = styled.img`
-  height: 50px;
-  width: 50px;
+  position: absolute;
+  height: 120px;
+  width: 120px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   object-fit: contain;
+
+  @media (min-width: 768px) {
+    height: 160px;
+    width: 160px;
+  }
+
+  @media (min-width: 1024px) {
+    height: 200px;
+    width: 200px;
+  }
 `;
 
 const NavLinks = styled.ul`
@@ -57,73 +86,47 @@ const LOGOUT_URL = 'http://localhost:8000/auth/logout';
 
 const Page = () => {
   const router = useRouter();
-  const [userName, setUserName] = useState<string | null>(null);
-
-  const logout = () => {
-    axios
-      .post(LOGOUT_URL)
-      .then(() => {
-        //어차피 kakao-refresh-token을 받아오지 않으니까 localStorage안에 들어있는 값은 새로고침 시 없어지니까
-        // 로컬에서 refresh-token을 발급 받은 걸 사용하면 된다.
-        localStorage.removeItem('name');
-        localStorage.removeItem('accessToken');
-        typeof window !== 'undefined' &&
-          window.localStorage.removeItem('expirationTime');
-        window.alert('로그아웃 되었습니다.');
-        router.replace('/');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setUserName(null);
-  };
+  const { state, logout } = useAuth();
+  const { isLoggedIn, userName } = state;
+  const prevIsLoggedIn = useRef(isLoggedIn);
 
   useEffect(() => {
-    const name =
-      typeof window !== 'undefined' && window.localStorage.getItem('name');
-    const savedTime =
-      typeof window !== 'undefined' && window.localStorage.getItem('savedTime');
-    const now = Date.now();
-    const THIRTY_MINUTES_IN_MS = 30 * 60 * 1000;
-
-    if (name && savedTime && now - Number(savedTime) < THIRTY_MINUTES_IN_MS) {
-      setUserName(name);
-    } else {
-      window.localStorage.removeItem('name');
-      window.localStorage.removeItem('savedTime');
-    }
-    const kakao = kakaoInit();
-
-    return () => {
-      if (kakao && kakao.Auth.getAccessToken()) {
-        kakao.Auth.logout();
+    if (prevIsLoggedIn.current !== isLoggedIn) {
+      if (!isLoggedIn) {
+        alert('로그아웃 되었습니다.');
       }
-    };
-  }, []);
+    }
+    prevIsLoggedIn.current = isLoggedIn;
+  }, [isLoggedIn]);
 
   return (
     <div>
       <Navbar>
         <NavContainer>
-          <NavLink href="/">
-            <img src="/maco_logo.jpg" alt="アグリート" className="w-48" />
-          </NavLink>
+          <Link href="/">
+            <LogoContainer>
+              <Logo src="/maco_logo.jpg" alt="アグリート" />
+            </LogoContainer>{' '}
+          </Link>
         </NavContainer>
         <NavLinks>
           <NavItem>
             <NavLink href="#">PageTop</NavLink>
           </NavItem>
           <NavItem>
-            <NavLink href="#">Controller</NavLink>
+            <NavLink href="/dashboard/manualcontrol">Controller</NavLink>
           </NavItem>
           <NavItem>
             <NavLink href="/dashboard">DashBoard</NavLink>
           </NavItem>
           <NavItem>
+            <NavLink href="/statistic">Statistic</NavLink>
+          </NavItem>
+          <NavItem>
             <NavLink href="/boards/main">QnA</NavLink>
           </NavItem>
           <NavItem>
-            {userName ? (
+            {isLoggedIn ? (
               <>
                 <div className="font-bold text-white">{`Hello, ${userName}`}</div>
                 <button className="font-bold text-white" onClick={logout}>
