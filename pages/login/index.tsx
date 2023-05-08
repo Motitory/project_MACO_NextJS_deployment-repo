@@ -54,8 +54,7 @@ export default function Login() {
                       username: res.kakao_account.email,
                     })
                     .then(() => {
-                      login(res.properties.nickname);
-                      alert('로그인 되었습니다.');
+                      login(res.properties.nickname); // 수정된 부분
                       router.replace('/');
                     })
                     .catch((err) => {
