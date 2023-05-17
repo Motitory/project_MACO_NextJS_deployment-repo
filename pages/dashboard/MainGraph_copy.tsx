@@ -165,7 +165,7 @@ function MainGraph() {
       }
     };
     fetchData();
-  }, []);
+  }, [irrigationData]);
 
   useEffect(() => {
     console.log(irrigationData);

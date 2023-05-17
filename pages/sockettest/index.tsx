@@ -7,6 +7,7 @@ import WaterOutlinedIcon from '@mui/icons-material/WaterOutlined';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Card, CardContent, CardHeader } from '@mui/material';
+import Image from 'next/image';
 import 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
 
@@ -29,7 +30,7 @@ interface EnvironmentData {
 }
 
 const SocketTest = () => {
-  const URL = 'ws://172.21.4.223:8002/grow';
+  const URL = 'ws://172.21.1.17:8002/grow';
   const dataKeys = ['image', 'recommended', 'prediction'];
   const { data, loading } = useSocketData<Data>(URL, dataKeys);
   const [chartData, setChartData] = useState<any>();
@@ -99,7 +100,7 @@ const SocketTest = () => {
 
   return (
     <div>
-      <img src={`data:image/png;base64,${data.image}`} alt="그래프 이미지" />
+      <Image src={`data:image/png;base64,${data.image}`} alt="그래프 이미지" />
       <h2>추천 온도: {data.recommended.temperature.toFixed(2)}°C</h2>
       <h2>추천 습도: {data.recommended.humidity.toFixed(2)}%</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

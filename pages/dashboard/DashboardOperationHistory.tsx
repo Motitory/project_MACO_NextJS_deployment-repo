@@ -1,95 +1,175 @@
-import React, { useEffect, useState } from 'react';
+import { LogData } from '@/pages/old_boards/interface/logData';
+// import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { UMachine } from '@/pages/old_boards/interface/umachine';
+import authRequest from '@/utils/request/authRequest';
+import { useQuery } from 'react-query';
+import {
+  startOfWeek,
+  endOfWeek,
+  format,
+  eachDayOfInterval,
+  isThisWeek,
+} from 'date-fns';
+import { ko } from 'date-fns/locale';
 
-interface LogData {
-  l_id: number;
-  mc_id: string;
-  sc_id: string;
-  umachine_id: string;
-  operation_type: '관수1' | '관수2';
-  operation_time: number;
-  start_time: string;
-  end_time: string;
-}
-
-const DashboardOperationHistory: React.FC = () => {
-  const [logData, setLogData] = useState<LogData[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const logsPerPage = 5;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/json/logMockData.json');
-        const responseData = response.data;
-        if (Array.isArray(responseData.operation_logs)) {
-          setLogData(responseData.operation_logs);
-        } else {
-          console.error(
-            '응답 데이터의 operation_logs가 배열이 아닙니다:',
-            responseData
-          );
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const handlePageClick = (newPage: number) => {
-    setCurrentPage(newPage);
+type OperationTimesByDay = {
+  [day: string]: {
+    wtime1: number;
+    wtime2: number;
+    ctime: number;
   };
+};
 
-  const indexOfLastLog = (currentPage + 1) * logsPerPage;
-  const indexOfFirstLog = indexOfLastLog - logsPerPage;
-  const currentLogs = logData.slice(indexOfFirstLog, indexOfLastLog);
+const fetchLogs = async () => {
+  const machineResponse = await authRequest.get<UMachine[]>(
+    'http://localhost:8000/machine'
+  );
+  const logPromises = machineResponse.data.map(async (machine) => {
+    const logResponse = await authRequest.get<string>(
+      `http://localhost:8000/manual/log/${machine.device}`
+    );
+    const logEntries = logResponse.data
+      .split('\n')
+      .filter((entry) => entry.length > 0);
+    const parsedLogEntries = logEntries.map((entry) => {
+      const [timestamp, json] = entry.split(' - ');
+      return {
+        ...JSON.parse(json),
+        timestamp,
+      };
+    });
+    return parsedLogEntries;
+  });
 
-  const maxPagesToShow = 5;
-  const totalPages = Math.min(
-    Math.ceil(logData.length / logsPerPage),
-    maxPagesToShow
+  const allLogs = await Promise.all(logPromises);
+  const logs = allLogs.find((logs) => logs.length > 0) || [];
+
+  // 가동 시간을 계산하고, 일별로 분류합니다.
+  const operationTimesByDay = logs.reduce<OperationTimesByDay>((acc, log) => {
+    const day = new Date(log.timestamp).toISOString().split('T')[0];
+    if (!(day in acc)) {
+      acc[day] = {
+        wtime1: 0,
+        wtime2: 0,
+        ctime: 0,
+      };
+    }
+    acc[day].wtime1 += Number(log.wtime1);
+    acc[day].wtime2 += Number(log.wtime2);
+    acc[day].ctime += Number(log.ctime);
+    return acc;
+  }, {});
+
+  return operationTimesByDay;
+};
+
+const getWeekRange = (date: Date) => {
+  const start = startOfWeek(date);
+  const end = endOfWeek(date);
+
+  return { start, end };
+};
+
+const DashboardOperationHistory = () => {
+  const [week, setWeek] = useState(new Date());
+  const {
+    data: operationTimesByDay,
+    isLoading,
+    isError,
+  } = useQuery<OperationTimesByDay>('operationLog', fetchLogs);
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
+
+  if (isError || !operationTimesByDay) {
+    return <div>작동 이력이 없습니다.</div>;
+  }
+
+  const { start: startDay, end: endDay } = getWeekRange(week);
+
+  const isThisWeekSelected = isThisWeek(week);
+
+  const eachDayOfTheWeek = eachDayOfInterval({ start: startDay, end: endDay });
+
+  const labels = eachDayOfTheWeek.map((day) =>
+    format(day, 'MM-dd, eee', { locale: ko })
   );
 
+  const operationTypes: ('wtime1' | 'wtime2' | 'ctime')[] = [
+    'wtime1',
+    'wtime2',
+    'ctime',
+  ];
+
+  const datasets = ['관수1', '관수2', '액비'].map((type, i) => {
+    const data = eachDayOfTheWeek.map((day) => {
+      const dayString = format(day, 'yyyy-MM-dd');
+      return operationTimesByDay[dayString]
+        ? operationTimesByDay[dayString][operationTypes[i]]
+        : 0;
+    });
+
+    return {
+      label: type,
+      data: data,
+      fill: false,
+      backgroundColor: `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${
+        Math.random() * 255
+      })`,
+      borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
+        Math.random() * 255
+      }, 0.2)`,
+    };
+  });
+
+  const data = {
+    labels: labels,
+    datasets: datasets,
+  };
+
+  const weekString = `${format(startDay, 'MM월')} ${
+    Math.floor((startDay.getDate() - 1) / 7) + 1
+  }주차`; // 주 정보를 문자열로 변환합니다.
+
   return (
-    <div className="dashboard-operation-history">
-      <h2 className="mb-4 text-2xl font-bold">작동 이력</h2>
-      <div className=" overflow-y-auto">
-        <table className="w-full table-auto">
-          <thead>
-            <tr>
-              <th className="border px-4 py-2">시작 시간</th>
-              <th className="border px-4 py-2">끝 시간</th>
-              <th className="border px-4 py-2">작동 시간</th>
-              <th className="border px-4 py-2">작동 유형</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentLogs.map((log) => (
-              <tr key={log.l_id} className="h-10">
-                <td className="border px-4 py-2">{log.start_time}</td>
-                <td className="border px-4 py-2">{log.end_time}</td>
-                <td className="border px-4 py-2">{log.operation_time}분</td>
-                <td className="border px-4 py-2">{log.operation_type}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="container mx-auto px-4">
+      {/* <h1 className="mb-4 text-xl font-bold">일별 가동 시간</h1> */}
+      <div className="flex justify-between">
+        <button
+          className="rounded bg-pink-500 py-2 px-4 font-bold text-white hover:bg-pink-700"
+          onClick={() =>
+            setWeek(new Date(week.getTime() - 7 * 24 * 60 * 60 * 1000))
+          }
+        >
+          이전 주
+        </button>
+        <button
+          className={`rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700 ${
+            isThisWeekSelected ? 'cursor-not-allowed opacity-50' : ''
+          }`}
+          onClick={() =>
+            !isThisWeekSelected &&
+            setWeek(new Date(week.getTime() + 7 * 24 * 60 * 60 * 1000))
+          }
+        >
+          다음 주
+        </button>
       </div>
-      <div className="mt-4">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            className={`mx-1 px-4 py-1 ${
-              currentPage === index ? 'bg-blue-600 text-white' : 'bg-white'
-            }`}
-            onClick={() => handlePageClick(index)}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      <Bar
+        data={data}
+        options={{
+          plugins: {
+            title: {
+              display: true,
+              text: weekString, // 그래프 제목을 설정합니다.
+            },
+          },
+        }}
+      />{' '}
     </div>
   );
 };

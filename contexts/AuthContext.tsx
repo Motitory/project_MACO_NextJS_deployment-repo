@@ -22,6 +22,7 @@ const AuthContext = createContext<{
   state: AuthState;
   login: (userName: string) => void;
   logout: () => void;
+  isAuthenticated: () => boolean;
 }>({
   state: {
     isLoggedIn: false,
@@ -29,6 +30,7 @@ const AuthContext = createContext<{
   },
   login: () => {},
   logout: () => {},
+  isAuthenticated: () => false,
 });
 
 const initialState = {
@@ -102,14 +104,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         login(storedName);
         console.log('토큰 유효함으로 로그인 처리');
       } else {
+        alert('로그인 시간이 만료되었습니다. 다시 로그인하세요.');
         logout();
         console.log('토큰 만료로 로그아웃 처리');
       }
     }
   }, [login, logout]);
 
+  const isAuthenticated = useCallback(() => {
+    return state.isLoggedIn;
+  }, [state.isLoggedIn]);
+
   return (
-    <AuthContext.Provider value={{ state, login, logout }}>
+    <AuthContext.Provider value={{ state, login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

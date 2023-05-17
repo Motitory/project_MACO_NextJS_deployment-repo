@@ -27,7 +27,7 @@ interface EnvironmentData {
 }
 
 const RecommendedValues = () => {
-  const URL = 'ws://172.21.4.223:8002/grow';
+  const URL = 'ws://172.21.1.17:8002/grow';
   const dataKeys = ['image', 'recommended', 'prediction'];
   const { data, loading } = useSocketData<Data>(URL, dataKeys);
   const [envData, setEnvData] = useState<EnvironmentData[]>([]);

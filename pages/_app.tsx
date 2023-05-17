@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import '@/styles/globals.css';
 import { useEffect, useState } from 'react';
 import { AppProps } from 'next/app';
@@ -66,8 +67,13 @@ export default function App({
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         {/* <ParallaxProvider> */}
+        <Head>
+          <script
+            src="https://developers.kakao.com/sdk/js/kakao.js"
+            async
+          ></script>
+        </Head>
         <Suspense fallback={<div>Loading...</div>}></Suspense>
-        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
         <AuthProvider>
           {/* <NavBar weather={weatherData} address={addressData?.address} /> */}
           {hideNavbar ? <NavBar2 /> : <NavBar />}

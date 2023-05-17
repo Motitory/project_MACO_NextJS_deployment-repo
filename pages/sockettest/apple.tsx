@@ -8,7 +8,7 @@ interface Data {
 }
 
 const Apple = () => {
-  const URL = 'ws://172.21.4.223:8002/apple';
+  const URL = 'ws://172.21.1.17:8002/apple';
   const dataKeys = ['image', 'prediction'];
   const { data, loading } = useSocketData<Data>(URL, dataKeys);
 

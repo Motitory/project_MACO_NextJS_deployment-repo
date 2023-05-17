@@ -347,8 +347,8 @@ const ManualControl = () => {
               <img
                 src={
                   isMeasuringLength
-                    ? 'http://172.21.4.223:8001/size_feed'
-                    : 'http://172.21.4.223:8001/video_feed'
+                    ? 'http://172.21.4.76:8001/size_feed'
+                    : 'http://172.21.4.76:8001/video_feed'
                 }
                 alt={isMeasuringLength ? '길이 측정' : '실시간 영상'}
                 onLoad={() => setIsVideoLoading(false)}

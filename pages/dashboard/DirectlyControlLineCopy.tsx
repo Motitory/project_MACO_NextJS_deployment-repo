@@ -147,7 +147,7 @@ function DirectlyControlLineCopy({ data }: { data: LineControl[] }) {
       }
     };
     fetchData();
-  }, [isTrigger]);
+  }, [isTrigger, hasData]);
 
   const handleTimeChange = (
     lineId: number,

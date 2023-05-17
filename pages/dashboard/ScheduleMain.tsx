@@ -93,7 +93,7 @@ function ScheduleMain({ data }: { data: Schedule[] }) {
       }
     };
     fetchData();
-  }, [isTrigger]);
+  }, [isTrigger, router, sortedData]);
 
   useEffect(() => {
     setSchedules(

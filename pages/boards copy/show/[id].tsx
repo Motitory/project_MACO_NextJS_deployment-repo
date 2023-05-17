@@ -1,8 +1,8 @@
-import authRequest from "@/utils/request/authRequest";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { Board } from "../interface/board";
+import authRequest from '@/utils/request/authRequest';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { Board } from '../interface/board';
 import {
   Button,
   Container,
@@ -11,8 +11,8 @@ import {
   makeStyles,
   Paper,
   Typography,
-} from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+} from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 type Post = {
   board: Board;
@@ -31,14 +31,14 @@ const useStyles = makeStyles((theme) =>
     },
     deleteButton: {
       color: theme.palette.error.main,
-      "&:hover": {
+      '&:hover': {
         backgroundColor: theme.palette.error.light,
       },
     },
     buttonContainer: {
       marginTop: theme.spacing(2),
-      display: "flex",
-      justifyContent: "flex-end",
+      display: 'flex',
+      justifyContent: 'flex-end',
     },
   })
 );
@@ -50,16 +50,19 @@ const ShowBoard = () => {
 
   const showBoard = async (boardId: number) => {
     try {
-      const response = await authRequest.get<Board>(`http://localhost:8000/boards/${boardId}`);
-      const getUser = await authRequest.get("http://localhost:8000/auth");
+      const response = await authRequest.get<Board>(
+        `http://localhost:8000/boards/${boardId}`
+      );
+      const getUser = await authRequest.get('http://localhost:8000/auth');
       if (
-        response.data.status === "PUBLIC" ||
-        (response.data.status === "PRIVATE" && response.data.user.id === getUser.data.id)
+        response.data.status === 'PUBLIC' ||
+        (response.data.status === 'PRIVATE' &&
+          response.data.user.id === getUser.data.id)
       ) {
         setBoard(response.data);
       } else {
-        window.alert("잘못된 접근입니다.");
-        router.replace("/boards/main");
+        window.alert('잘못된 접근입니다.');
+        router.replace('/boards/main');
       }
     } catch (error) {
       console.error(error);
@@ -71,15 +74,15 @@ const ShowBoard = () => {
       const boardId = Number(router.query.id);
       showBoard(boardId);
     } else {
-      window.alert("다시 로그인 해 주세요.");
+      window.alert('다시 로그인 해 주세요.');
     }
   }, [router.query]);
 
   const deleteBoard = async () => {
     try {
       await authRequest.delete(`http://localhost:8000/boards/${board?.id}`);
-      window.alert("삭제 완료");
-      router.replace("/boards/main");
+      window.alert('삭제 완료');
+      router.replace('/boards/main');
     } catch (error) {
       console.error(error);
     }
@@ -98,15 +101,28 @@ const ShowBoard = () => {
             </Typography>
             <div className={classes.buttonContainer}>
               <Link href={`/boards/edit/${board.id}`} passHref>
-                <Button variant="contained" color="primary" className={classes.button}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                >
                   수정
                 </Button>
               </Link>
-              <Button variant="contained" color="secondary" className={classes.button} onClick={deleteBoard}>
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.button}
+                onClick={deleteBoard}
+              >
                 삭제
               </Button>
               <Link href="/boards/main" passHref>
-                <Button variant="outlined" color="primary" className={classes.button}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                >
                   목록으로
                 </Button>
               </Link>

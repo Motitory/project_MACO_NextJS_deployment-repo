@@ -120,7 +120,7 @@ function SumGraph() {
   }, [irrigationManualData]);
 
   useEffect(() => {
-    setSumData(line_1_acc);
+    // setSumData(line_1_acc);
   }, [irrigationData, irrgationManualData]);
 
   // const handleChange = (date: Date) => {

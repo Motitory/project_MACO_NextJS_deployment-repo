@@ -54,11 +54,20 @@ export default function Login() {
                       username: res.kakao_account.email,
                     })
                     .then(() => {
-                      login(res.properties.nickname); // 수정된 부분
+                      login(res.properties.nickname);
                       router.replace('/');
                     })
                     .catch((err) => {
-                      router.replace('/login');
+                      // 에러 상태 코드가 401 또는 500인 경우
+                      if (
+                        err.response.status === 401 ||
+                        err.response.status === 500
+                      ) {
+                        alert(
+                          '로그인 시간이 만료되었습니다. 다시 로그인하세요.'
+                        );
+                        router.replace('/login');
+                      }
                     });
                 });
             },

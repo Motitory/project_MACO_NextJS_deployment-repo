@@ -1,54 +1,74 @@
+import { useQuery } from 'react-query';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import authRequest from '@/utils/request/authRequest';
 import Link from 'next/link';
-import { Board } from '../boards/interface/board';
+import authRequest from '@/utils/request/authRequest';
+import { Board } from '../old_boards/interface/board';
 
 type Post = {
   board: Board;
 };
 
+const getPosts = async (userId: number): Promise<Post[]> => {
+  const response = await authRequest.get<Board[]>(
+    'http://localhost:8000/boards'
+  );
+  return response.data
+    .filter(
+      (board) =>
+        board.user.id === userId ||
+        board.status === 'PUBLIC' ||
+        board.status === 'PRIVATE'
+    )
+    .map((board) => ({ board }));
+};
+
 const Boards = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
   const [id, setId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 7;
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-
-  const fetchPosts = async () => {
-    try {
-      const response = await authRequest.get<Board[]>(
-        'http://localhost:8000/boards'
-      );
-      const user = await getUser();
-      const allBoards = response.data.filter(
-        (board) =>
-          board.user.id === user.id ||
-          board.status === 'PUBLIC' ||
-          board.status === 'PRIVATE'
-      );
-      allBoards.sort((a, b) => (a.createDate < b.createDate ? 1 : -1));
-      const posts = allBoards.map((board) => ({ board }));
-      setPosts(posts);
-      setLoading(false);
-    } catch (error) {
-      window.alert('다시 로그인 해 주십시오');
-      router.replace('/login');
-      console.error(error);
-    }
-  };
+  const { data: user } = useQuery('user', () =>
+    authRequest.get('http://localhost:8000/auth')
+  );
+  const postsQuery = useQuery('posts', () => getPosts(user?.data?.id), {
+    enabled: !!user,
+    staleTime: 1000 * 60 * 5, // 5분
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      fetchPosts();
-    };
-    fetchData();
-  }, []);
+    if (user) {
+      setId(user.data.id);
+      // 사용자 ID가 설정되면 게시물을 가져옵니다.
+      postsQuery.refetch();
+    }
+  }, [user, postsQuery]);
 
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  // if (postsQuery.isLoading) {
+  //   return <div>Loading...</div>;
+  // }
+
+  const currentPosts = useMemo(() => {
+    if (!postsQuery.data) {
+      return [];
+    }
+
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    return postsQuery.data.slice(indexOfFirstPost, indexOfLastPost);
+  }, [postsQuery.data, currentPage, postsPerPage]);
+
+  if (!currentPosts.length) {
+    return <div>Loading...</div>;
+  }
+
+  if (postsQuery.error) {
+    window.alert('다시 로그인 해 주십시오');
+    router.replace('/login');
+    return (
+      <div>An error has occurred: {(postsQuery.error as Error).message}</div>
+    );
+  }
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -64,7 +84,7 @@ const Boards = () => {
 
   return (
     <>
-      {loading && (
+      {postsQuery.isLoading && (
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-gray-500 opacity-75">
           <div className="flex flex-col items-center rounded-lg border bg-white py-2 px-5">
             <h2 className="text-lg font-semibold">Loading...</h2>
@@ -167,7 +187,11 @@ const Boards = () => {
           {/* 작성자와 루트 사용자를 제외한 사용자는 볼 수 없게 수정 */}
           {/* 여기에 해당 사용자의 role에 따른 로직을 추가해주세요 */}
           <div className="flex justify-center">
-            {[...Array(Math.ceil(posts.length / postsPerPage))].map((e, i) => (
+            {[
+              ...Array(
+                Math.ceil((postsQuery.data?.length || 0) / postsPerPage)
+              ),
+            ].map((e, i) => (
               <button
                 key={i}
                 onClick={() => paginate(i + 1)}
