@@ -1,9 +1,9 @@
-import { LogData } from '@/pages/old_boards/interface/logData';
+// import { LogData } from '@/pages/old_boards/interface/logData';
 // import { Line } from 'react-chartjs-2';
 import { Bar } from 'react-chartjs-2';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { UMachine } from '@/pages/old_boards/interface/umachine';
+// import { UMachine } from '@/pages/old_boards/interface/umachine';
 import authRequest from '@/utils/request/authRequest';
 import { useQuery } from 'react-query';
 import {
@@ -14,6 +14,7 @@ import {
   isThisWeek,
 } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { UMachine } from '@/interfaces/umachine';
 
 type OperationTimesByDay = {
   [day: string]: {
@@ -31,6 +32,7 @@ const fetchLogs = async () => {
     const logResponse = await authRequest.get<string>(
       `http://localhost:8000/manual/log/${machine.device}`
     );
+    console.log(logResponse.data);
     const logEntries = logResponse.data
       .split('\n')
       .filter((entry) => entry.length > 0);
@@ -57,9 +59,9 @@ const fetchLogs = async () => {
         ctime: 0,
       };
     }
-    acc[day].wtime1 += Number(log.wtime1);
-    acc[day].wtime2 += Number(log.wtime2);
-    acc[day].ctime += Number(log.ctime);
+    acc[day].wtime1 += Number(log.wtime1) * 0.5;
+    acc[day].wtime2 += Number(log.wtime2) * 0.5;
+    acc[day].ctime += Number(log.ctime) * 0.5;
     return acc;
   }, {});
 
@@ -140,7 +142,7 @@ const DashboardOperationHistory = () => {
       {/* <h1 className="mb-4 text-xl font-bold">일별 가동 시간</h1> */}
       <div className="flex justify-between">
         <button
-          className="rounded bg-pink-500 py-2 px-4 font-bold text-white hover:bg-pink-700"
+          className="rounded bg-pink-500 px-4 py-2 font-bold text-white hover:bg-pink-700"
           onClick={() =>
             setWeek(new Date(week.getTime() - 7 * 24 * 60 * 60 * 1000))
           }
@@ -148,7 +150,7 @@ const DashboardOperationHistory = () => {
           이전 주
         </button>
         <button
-          className={`rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700 ${
+          className={`rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 ${
             isThisWeekSelected ? 'cursor-not-allowed opacity-50' : ''
           }`}
           onClick={() =>
@@ -159,6 +161,7 @@ const DashboardOperationHistory = () => {
           다음 주
         </button>
       </div>
+      <h6 className="">(1분 당 : 0.5L 분사 기준)</h6>
       <Bar
         data={data}
         options={{
@@ -166,6 +169,15 @@ const DashboardOperationHistory = () => {
             title: {
               display: true,
               text: weekString, // 그래프 제목을 설정합니다.
+            },
+          },
+          scales: {
+            y: {
+              ticks: {
+                callback: function (value) {
+                  return value + 'L'; // value 뒤에 'L' 문자열을 추가합니다.
+                },
+              },
             },
           },
         }}

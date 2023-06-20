@@ -30,7 +30,7 @@ const ScrollableComponent = () => {
   return (
     <Wrapper>
       <Content>
-        <Image src="/image.jpg" />
+        <Image src="/image.jpg" alt="test" />
         <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Text>
       </Content>
     </Wrapper>

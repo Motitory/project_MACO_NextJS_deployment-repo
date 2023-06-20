@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useRouter } from 'next/router';
 import authRequest from '@/utils/request/authRequest';
-import { MachineData } from '@/pages/dashboard/interfaces/machineData';
+import { MachineData } from '@/interfaces/machineData';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -12,6 +12,7 @@ import Container from '@mui/material/Container';
 import { styled } from '@mui/system';
 import Divider from '@mui/material/Divider';
 import { useQuery } from 'react-query';
+import Image from 'next/image';
 
 const CustomContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -344,7 +345,7 @@ const ManualControl = () => {
               {isVideoLoading && (
                 <p className="mb-2 text-center">로딩 중입니다...</p>
               )}
-              <img
+              <Image
                 src={
                   isMeasuringLength
                     ? 'http://172.21.4.76:8001/size_feed'

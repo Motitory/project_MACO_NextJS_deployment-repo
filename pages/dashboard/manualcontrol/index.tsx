@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { UMachine } from '@/pages/dashboard/interfaces/umachine';
+import { UMachine } from '@/interfaces/umachine';
 import authRequest from '@/utils/request/authRequest';
-import { MachineData } from '@/pages/dashboard/interfaces/machineData';
+import { MachineData } from '@/interfaces/machineData';
 import Link from 'next/link';
 import { styled } from '@mui/system';
 import { Box, Typography, Paper, Grid, Chip } from '@mui/material';

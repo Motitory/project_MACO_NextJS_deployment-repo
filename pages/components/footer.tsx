@@ -1,10 +1,13 @@
+import React from 'react';
+import Image from 'next/image';
+
 export default function Footer() {
   return (
     <>
       <footer className="overflow-hidden rounded-lg p-4 shadow dark:bg-gray-900 md:px-6 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <a href="" className="mb-4 flex items-center sm:mb-0">
-            <img src="" className="mr-3 h-8" alt="Logo" />
+            <Image src="" className="mr-3 h-8" alt="Logo" />
             <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
               MaCo
             </span>

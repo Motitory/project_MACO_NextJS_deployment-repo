@@ -5,7 +5,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import YouTube from 'react-youtube';
 import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-// import Image from 'next/image';
+import Image from 'next/image';
 
 const StyledCarousel = styled(Carousel)`
   height: 200vh;
@@ -197,7 +197,7 @@ export default function Home() {
       alert('로그인 시간이 만료되었습니다. 다시 로그인하세요.');
       logout();
     }
-  }, []);
+  }, [isAuthenticated, logout]); // 'isAuthenticated'와 'logout'를 의존성 배열에 추가
 
   return (
     <div>
@@ -295,19 +295,19 @@ export default function Home() {
             transitionTime={0}
           >
             <div>
-              <img
+              <Image
                 src="/controller_photo/list_of_devices.png"
                 alt="Controller 1"
               />
             </div>
             <div>
-              <img
+              <Image
                 src="/controller_photo/manual_control.png"
                 alt="Controller 2"
               />
             </div>
             <div>
-              <img src="/controller_photo/video.png" alt="Controller 3" />
+              <Image src="/controller_photo/video.png" alt="Controller 3" />
             </div>
           </FeatureCarousel>
         </FeatureSection>
@@ -332,19 +332,19 @@ export default function Home() {
             transitionTime={0}
           >
             <div>
-              <img
+              <Image
                 src="/dashboard_photo/dashboard_view.png"
                 alt="dashboard 1"
               />
             </div>
             <div>
-              <img
+              <Image
                 src="/dashboard_photo/manual_control_view.png"
                 alt="dashboard 2"
               />
             </div>
             <div>
-              <img
+              <Image
                 src="/dashboard_photo/operating_time_view.png"
                 alt="dashboard 3"
               />
@@ -372,19 +372,19 @@ export default function Home() {
             transitionTime={0}
           >
             <div>
-              <img
+              <Image
                 src="/statistic_photo/temperature_graph.png"
                 alt="statistic_photo 1"
               />
             </div>
             <div>
-              <img
+              <Image
                 src="/statistic_photo/growth_prediction.png"
                 alt="statistic_photo 2"
               />
             </div>
             <div>
-              <img
+              <Image
                 src="/statistic_photo/apple_price_prediction.png"
                 alt="statistic_photo 3"
               />
@@ -413,13 +413,13 @@ export default function Home() {
             transitionTime={0}
           >
             <div>
-              <img src="/qna_photo/qna_main.png" alt="qna 1" />
+              <Image src="/qna_photo/qna_main.png" alt="qna 1" />
             </div>
             <div>
-              <img src="/qna_photo/qna_write.png" alt="qna 2" />
+              <Image src="/qna_photo/qna_write.png" alt="qna 2" />
             </div>
             <div>
-              <img src="/qna_photo/qna_update.png" alt="qna 3" />
+              <Image src="/qna_photo/qna_update.png" alt="qna 3" />
             </div>
           </FeatureCarousel>
         </FeatureSection>

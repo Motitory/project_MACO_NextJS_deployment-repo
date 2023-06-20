@@ -52,7 +52,7 @@ export default function ControlView() {
 
   return (
     <div className="flex h-full w-full flex-col p-4 md:flex-row">
-      <div className="md:w-2/5 flex w-full flex-col md:mr-4">
+      <div className="flex w-full flex-col md:mr-4 md:w-2/5">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold">수동 조작</h2>
           <Link href="/dashboard/manualcontrol">
@@ -72,7 +72,7 @@ export default function ControlView() {
         </div>
         <DashboardSchedule />
       </div>
-      <div className="md:w-3/5 mt-4 w-full md:mt-0">
+      <div className="mt-4 w-full md:mt-0 md:w-3/5">
         <div className="flex items-center justify-between">
           <RecommendedValues />
         </div>
@@ -94,19 +94,19 @@ export default function ControlView() {
         </div>
         {/* <DashboardChart /> */}
         <GrowthRateChart />
-        <div className="mt-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">AI 예측 그래프</h2>
-          <Link href="/sockettest">
+        {/* <div className="mt-4 flex items-center justify-between"> */}
+        {/* <h2 className="text-2xl font-bold">AI 예측 그래프</h2> */}
+        {/* <Link href="/sockettest">
             <button className="bg-blue-500 px-4 py-2 text-white">
               <ZoomInIcon /> 상세보기
             </button>
-          </Link>
-        </div>
-        <div className="mt-4">
-          <SocketGrowImage />
-        </div>
+          </Link> */}
+        {/* </div> */}
+        {/* <div className="mt-4"> */}
+        {/* <SocketGrowImage /> */}
+        {/* </div> */}
         <div className="mt-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">일별 가동 시간</h2>
+          <h2 className="text-2xl font-bold">일별 분사량</h2>
         </div>
         <div className="mt-4">
           <DashboardOperationHistory />
@@ -135,7 +135,7 @@ export default function ControlView() {
               {isVideoLoading && (
                 <p className="mb-2 text-center">로딩 중입니다...</p>
               )}
-              <img
+              <Image
                 src={
                   isMeasuringLength
                     ? 'http://172.21.4.76:8001/size_feed'

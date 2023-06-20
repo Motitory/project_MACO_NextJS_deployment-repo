@@ -59,15 +59,15 @@ export default function Login() {
                     })
                     .catch((err) => {
                       // 에러 상태 코드가 401 또는 500인 경우
-                      if (
-                        err.response.status === 401 ||
-                        err.response.status === 500
-                      ) {
-                        alert(
-                          '로그인 시간이 만료되었습니다. 다시 로그인하세요.'
-                        );
-                        router.replace('/login');
-                      }
+                      // if (
+                      //   // err.response.status === 401 ||
+                      //   err.response.status === 500
+                      // ) {
+                      //   alert(
+                      //     '로그인 시간이 만료되었습니다. 다시 로그인하세요.'
+                      //   );
+                      //   router.replace('/login');
+                      // }
                     });
                 });
             },
@@ -98,7 +98,7 @@ export default function Login() {
           </div>
           <div className="text-center">
             <button
-              className="rounded border border-yellow-600 bg-yellow-500 py-2 px-4 font-bold text-white transition duration-200 ease-in-out hover:border-yellow-800 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-opacity-50"
+              className="rounded border border-yellow-600 bg-yellow-500 px-4 py-2 font-bold text-white transition duration-200 ease-in-out hover:border-yellow-800 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-opacity-50"
               onClick={kakaoLogin}
             >
               카카오로그인

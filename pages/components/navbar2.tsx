@@ -4,6 +4,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useContext } from 'react';
+import Image from 'next/image';
 
 export default function NavBar() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function NavBar() {
             href="/"
             className="text-lg font-semibold text-gray-800 dark:text-white"
           >
-            <img
+            <Image
               src="/maco_logo.jpg"
               alt="アグリート"
               className="w-16 md:w-20 lg:w-24"

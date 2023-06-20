@@ -2,7 +2,7 @@ import authRequest from '@/utils/request/authRequest';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Board } from '../interface/board';
+import { Board } from '../../../interfaces/board';
 
 const ShowBoard = () => {
   const [board, setBoard] = useState<Board | null>(null);
@@ -15,7 +15,6 @@ const ShowBoard = () => {
         `http://localhost:8000/boards/${boardId}`
       );
       setBoard(response.data);
-      getUser();
     } catch (error) {
       console.error(error);
     }
@@ -24,15 +23,21 @@ const ShowBoard = () => {
   const getUser = async () => {
     try {
       const response = await authRequest.get('http://localhost:8000/auth');
-      setId(response.data.id);
+      console.log(response.data);
+      const userId = response.data?.id;
+      if (userId) {
+        setId(userId);
+      } else {
+        console.log('getUser 에러: 유효한 id가 없습니다.');
+      }
       return response.data;
     } catch (error) {
-      console.log('getUser 에러');
+      console.log('getUser 에러:', error);
     }
   };
 
   const handleEditClick = () => {
-    if (board?.user.id === id) {
+    if (board && board.user && board?.user.id === id) {
       router.push(`/boards/edit/${board.id}`);
     } else {
       window.alert('권한이 없습니다.');
@@ -41,8 +46,9 @@ const ShowBoard = () => {
   };
 
   const handleDeleteClick = () => {
-    if (board?.user.id === id) {
+    if (board && board.user && board?.user.id === id) {
       deleteBoard();
+      window.alert('삭제 완료');
     } else {
       window.alert('권한이 없습니다.');
       router.back();
@@ -57,6 +63,10 @@ const ShowBoard = () => {
       window.alert('다시 로그인 해 주세요.');
     }
   }, [router.query]);
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   const deleteBoard = async () => {
     try {

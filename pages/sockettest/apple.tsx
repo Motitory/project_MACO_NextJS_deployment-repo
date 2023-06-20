@@ -1,6 +1,7 @@
 import { useSocketData } from '../../utils/socket';
 import { Line } from 'react-chartjs-2';
-import { formatChartData, formatDate } from './utils';
+import { formatChartData, formatDate } from '../../utils/utils';
+import Image from 'next/image';
 
 interface Data {
   image: string;
@@ -23,7 +24,7 @@ const Apple = () => {
   }
   return (
     <div>
-      <img src={`data:image/png;base64,${data.image}`} alt="그래프 이미지" />
+      <Image src={`data:image/png;base64,${data.image}`} alt="그래프 이미지" />
       <Line
         data={chartData}
         options={{

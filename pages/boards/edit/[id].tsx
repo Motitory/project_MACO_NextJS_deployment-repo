@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import authRequest from '@/utils/request/authRequest';
-import { Board } from '@/pages/boards/interface/board';
+import { Board } from '@/interfaces/board';
 
 const EditBoard = () => {
   const router = useRouter();

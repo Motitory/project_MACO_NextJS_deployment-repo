@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import authRequest from '@/utils/request/authRequest';
-import { UMachine } from '@/pages/dashboard/interfaces/umachine';
+import { UMachine } from '@/interfaces/umachine';
 import { Card, CardContent, Grid, Typography, Box } from '@mui/material';
 import OpacityIcon from '@mui/icons-material/Opacity';
 import MedicationIcon from '@mui/icons-material/Medication';

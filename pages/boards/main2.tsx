@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import authRequest from '@/utils/request/authRequest';
 import Link from 'next/link';
-import { Board } from '../boards/interface/board';
+import { Board } from '../../interfaces/board';
 import {
   Table,
   TableBody,
@@ -45,7 +45,7 @@ const Boards = () => {
 
   const classes = useStyles();
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       const response = await authRequest.get<Board[]>(
         'http://localhost:8000/boards'
@@ -65,7 +65,7 @@ const Boards = () => {
       router.replace('/login');
       console.error(error);
     }
-  };
+  }, [router]);
 
   const getUser = async () => {
     try {
@@ -82,7 +82,7 @@ const Boards = () => {
       fetchPosts();
     };
     fetchData();
-  }, []);
+  }, [fetchPosts]);
 
   return (
     <>

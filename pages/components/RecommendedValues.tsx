@@ -27,7 +27,7 @@ interface EnvironmentData {
 }
 
 const RecommendedValues = () => {
-  const URL = 'ws://172.21.1.17:8002/grow';
+  const URL = 'ws://172.21.4.76:8002/grow';
   const dataKeys = ['image', 'recommended', 'prediction'];
   const { data, loading } = useSocketData<Data>(URL, dataKeys);
   const [envData, setEnvData] = useState<EnvironmentData[]>([]);
@@ -64,7 +64,7 @@ const RecommendedValues = () => {
     data.recommended.humidity - latestEnvironment.humidity;
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2">
       <Card className="rounded-md">
         <CardHeader
           className="bg-red-500 text-white"

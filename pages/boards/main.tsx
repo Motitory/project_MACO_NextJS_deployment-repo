@@ -1,124 +1,87 @@
 import { useQuery } from 'react-query';
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import authRequest from '@/utils/request/authRequest';
-import { Board } from '../old_boards/interface/board';
+import { Board } from '../../interfaces/board';
 
 type Post = {
   board: Board;
 };
 
-const getPosts = async (userId: number): Promise<Post[]> => {
-  const response = await authRequest.get<Board[]>(
-    'http://localhost:8000/boards'
+const fetchBoards = async (
+  userId: number,
+  page: number,
+  limit: number
+): Promise<{ boards: Board[]; total: number }> => {
+  const response = await authRequest.get(
+    `http://localhost:8000/boards?page=${page}&limit=${limit}`
   );
-  return response.data
-    .filter(
-      (board) =>
-        board.user.id === userId ||
-        board.status === 'PUBLIC' ||
-        board.status === 'PRIVATE'
-    )
-    .map((board) => ({ board }));
+  const boards = response.data.data.filter(
+    (board: { user: { id: number }; status: string }) =>
+      (board.user && board.user.id === userId) ||
+      board.status === 'PUBLIC' ||
+      board.status === 'PRIVATE'
+  );
+  console.log(boards);
+  return { boards, total: response.data.total };
 };
 
 const Boards = () => {
-  const [id, setId] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
   const postsPerPage = 7;
   const router = useRouter();
+
   const { data: user } = useQuery('user', () =>
     authRequest.get('http://localhost:8000/auth')
   );
-  const postsQuery = useQuery('posts', () => getPosts(user?.data?.id), {
-    enabled: !!user,
-    staleTime: 1000 * 60 * 5, // 5분
-  });
+
+  const {
+    data: boardsData,
+    isLoading,
+    error,
+  } = useQuery(
+    ['boards', userId, page, postsPerPage],
+    () => fetchBoards(userId!, page, postsPerPage),
+    { enabled: !!userId }
+  );
 
   useEffect(() => {
-    if (user) {
-      setId(user.data.id);
-      // 사용자 ID가 설정되면 게시물을 가져옵니다.
-      postsQuery.refetch();
+    if (user?.data?.id) {
+      setUserId(user.data.id);
     }
-  }, [user, postsQuery]);
+  }, [user]);
 
-  // if (postsQuery.isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  const currentPosts = useMemo(() => {
-    if (!postsQuery.data) {
-      return [];
-    }
-
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    return postsQuery.data.slice(indexOfFirstPost, indexOfLastPost);
-  }, [postsQuery.data, currentPage, postsPerPage]);
-
-  if (!currentPosts.length) {
-    return <div>Loading...</div>;
-  }
-
-  if (postsQuery.error) {
+  if (isLoading) return <></>;
+  if (error) {
     window.alert('다시 로그인 해 주십시오');
     router.replace('/login');
     return (
-      <div>An error has occurred: {(postsQuery.error as Error).message}</div>
+      <div>
+        An error has occurred: {error instanceof Error ? error.message : ''}
+      </div>
     );
   }
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  const getUser = async () => {
-    try {
-      const response = await authRequest.get('http://localhost:8000/auth');
-      setId(response.data.id);
-      return response.data;
-    } catch (error) {
-      console.log('getUser 에러');
-    }
-  };
+  const paginate = (pageNumber: number) => setPage(pageNumber);
 
   return (
     <>
-      {postsQuery.isLoading && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-gray-500 opacity-75">
-          <div className="flex flex-col items-center rounded-lg border bg-white py-2 px-5">
-            <h2 className="text-lg font-semibold">Loading...</h2>
-            <div className="flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="mr-3 h-5 w-5 animate-spin border-l-2 border-gray-900"
-              >
-                <circle cx="12" cy="12" r="10" className="opacity-25" />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4.914 13.13a8 8 0 0 0 11.314 0l1.414 1.414a10 10 0 1 1-14.142 0l1.414-1.414zm14.142-2.828a8 8 0 0 0-11.314 0L6.342 9.868a10 10 0 1 1 14.142 0l-1.414 1.414z"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-      )}
       <div className="flex min-h-screen flex-col items-center justify-center">
         <h1 className="mb-6 text-3xl">QnA</h1>
         <div className="w-full sm:w-4/5 md:w-3/5 lg:w-1/2">
           <ul id="post-list">
-            {currentPosts.map((post) => (
+            {boardsData?.boards.map((post) => (
               <li
-                key={post.board.id}
+                key={post.id}
                 className="post-item mb-4 cursor-pointer rounded-lg bg-white p-4 shadow hover:bg-gray-100 hover:text-black"
               >
                 <div className="flex flex-col">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">
-                      글 번호 : {post.board.id}
-                      {post.board.status === 'PRIVATE' && (
+                      글 번호 : {post.id}
+                      {post.status === 'PRIVATE' && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="ml-1 inline h-4 w-4 text-red-500"
@@ -130,19 +93,18 @@ const Boards = () => {
                       )}
                     </span>
                     <span className="text-gray-600">
-                      작성자 : {post.board.user.nickname}
+                      작성자 : {post.user ? post.user.nickname : 'Unknown'}
                     </span>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
-                    {/* 관리자 id 설정 */}
-                    {post.board.user.id === id || id === 2 ? (
-                      <Link href={`/boards/show/${post.board.id}`}>
+                    {post.user?.id === userId || userId === 2 ? (
+                      <Link href={`/boards/show/${post.id}`}>
                         <p className="post-title font-bold text-blue-600">
-                          글 제목 : {post.board.title}
+                          글 제목 : {post.title}
                         </p>
                       </Link>
-                    ) : post.board.status === 'PRIVATE' ? (
-                      <Link href={`/boards/show/${post.board.id}`}>
+                    ) : post.status === 'PRIVATE' ? (
+                      <Link href={`/boards/show/${post.id}`}>
                         <p
                           className="post-title font-bold text-red-500"
                           onClick={(e) => {
@@ -154,13 +116,13 @@ const Boards = () => {
                         </p>
                       </Link>
                     ) : (
-                      <Link href={`/boards/show/${post.board.id}`}>
+                      <Link href={`/boards/show/${post.id}`}>
                         <p className="post-title font-bold text-blue-600">
-                          글 제목 : {post.board.title}
+                          글 제목 : {post.title}
                         </p>
                       </Link>
                     )}
-                    {post.board.admin_check && (
+                    {post.admin_check && (
                       <div className="flex items-center">
                         <span className="font-semibold text-green-600">
                           답변 완료
@@ -184,24 +146,20 @@ const Boards = () => {
               </li>
             ))}
           </ul>
-          {/* 작성자와 루트 사용자를 제외한 사용자는 볼 수 없게 수정 */}
-          {/* 여기에 해당 사용자의 role에 따른 로직을 추가해주세요 */}
           <div className="flex justify-center">
-            {[
-              ...Array(
-                Math.ceil((postsQuery.data?.length || 0) / postsPerPage)
-              ),
-            ].map((e, i) => (
-              <button
-                key={i}
-                onClick={() => paginate(i + 1)}
-                className={`mx-1 cursor-pointer rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 ${
-                  currentPage === i + 1 && 'bg-gray-700'
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {[...Array(Math.ceil((boardsData?.total || 0) / postsPerPage))].map(
+              (e, i) => (
+                <button
+                  key={i}
+                  onClick={() => paginate(i + 1)}
+                  className={`mx-1 cursor-pointer rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 ${
+                    page === i + 1 && 'bg-gray-700'
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              )
+            )}
           </div>
         </div>
         <Link
