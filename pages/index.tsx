@@ -6,6 +6,7 @@ import YouTube from 'react-youtube';
 import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Image from 'next/image';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 const StyledCarousel = styled(Carousel)`
   height: 200vh;
@@ -190,11 +191,12 @@ const FeatureCarousel = styled(Carousel)`
 
 export default function Home() {
   const { logout, isAuthenticated } = useAuth();
+  const resources = useLanguageResources();
 
   useEffect(() => {
     if (!isAuthenticated()) {
       // 인증이 만료되었다면
-      alert('로그인 시간이 만료되었습니다. 다시 로그인하세요.');
+      alert(`${resources.loginTimeout}`);
       logout();
     }
   }, [isAuthenticated, logout]); // 'isAuthenticated'와 'logout'를 의존성 배열에 추가
@@ -229,36 +231,31 @@ export default function Home() {
         <Logo src="/maco_logo.jpg" alt="스마트팜 로고" />
         <ContentWrapper>
           <ContentHeader>
-            <Title>アグリードは何か？</Title>
+            <Title>{resources.agriWhat}</Title>
           </ContentHeader>
           <ContentSection>
-            <Subtitle>「マートファーム管理システム」</Subtitle>
-            <p>ビッグデータとAIを使って環境による生長分析し、</p>
-            <p>ユーザーが簡単に栽培できるサービスです。</p>
+            <Subtitle>{resources.smartFarmSystem}</Subtitle>
+            <p>{resources.bigDataAI}</p>
+            <p>{resources.userEasyCultivate}</p>
           </ContentSection>
           <ContentSection>
-            <h3>품질 향상 및 자원 절약</h3>
-            <p>
-              또한, 스마트팜 기술을 활용하면 농작물의 품질을 향상시키고 농작물에
-              필요한 물, 비료 및 농약의 사용량을 줄일 수 있습니다. 이러한
-              혁신적인 방식으로 농업과 환경의 지속 가능성을 높일 수 있습니다.
-            </p>
+            <h3>{resources.qualityResourceSave}</h3>
+            <p>{resources.qualityResourceSaveContent}</p>
           </ContentSection>
           <MiddleSectionWrapper>
-            <MiddleSectionTitle>환경 친화적인 스마트팜</MiddleSectionTitle>
+            <MiddleSectionTitle>
+              {resources.ecoFriendlySmartFarm}
+            </MiddleSectionTitle>
             <MiddleSectionSubtitle>
-              친환경적인 농업의 새로운 패러다임
+              {resources.newParadigm}
             </MiddleSectionSubtitle>
             <MiddleSectionContent>
-              스마트팜은 식물의 성장 환경을 최적화하여 농작물의 품질 향상 및
-              자원 절약을 실현할 수 있는 차세대 농업 기술입니다. 이를 통해
-              환경에 미치는 부정적 영향을 줄이고, 지속 가능한 농업 발전을
-              이루어낼 수 있습니다. 함께 스마트팜으로 더 나은 미래를 만들어가요!
+              {resources.newParadigmContent}
             </MiddleSectionContent>
           </MiddleSectionWrapper>
         </ContentWrapper>
         <VideoSection>
-          <VideoTitle>스마트팜 소개 영상</VideoTitle>
+          <VideoTitle>{resources.smartFarmIntroVideo}</VideoTitle>
           <div style={{ width: '100%' }}>
             <YouTube
               videoId="Ual5agBwDyk"
@@ -274,11 +271,10 @@ export default function Home() {
           </div>
         </VideoSection>
         <FeatureSection>
-          <FeatureTitle>컨트롤러</FeatureTitle>
-          <FeatureSubtitle>편리한 기능</FeatureSubtitle>
+          <FeatureTitle>{resources.controller}</FeatureTitle>
+          <FeatureSubtitle>{resources.convenienceFeatures}</FeatureSubtitle>
           <FeatureDescription>
-            컨트롤러 기능을 이용하여 스마트팜을 쉽고 편리하게 관리할 수
-            있습니다.
+            {resources.convenienceFeaturesContent}
           </FeatureDescription>
           <FeatureCarousel
             showThumbs={false}
@@ -298,25 +294,32 @@ export default function Home() {
               <Image
                 src="/controller_photo/list_of_devices.png"
                 alt="Controller 1"
+                width={100}
+                height={100}
               />
             </div>
             <div>
               <Image
                 src="/controller_photo/manual_control.png"
                 alt="Controller 2"
+                width={100}
+                height={100}
               />
             </div>
             <div>
-              <Image src="/controller_photo/video.png" alt="Controller 3" />
+              <Image
+                src="/controller_photo/video.png"
+                alt="Controller 3"
+                width={100}
+                height={100}
+              />
             </div>
           </FeatureCarousel>
         </FeatureSection>
         <FeatureSection>
-          <FeatureTitle>대시보드</FeatureTitle>
-          <FeatureSubtitle>한눈에 확인</FeatureSubtitle>
-          <FeatureDescription>
-            대시보드를 통해 스마트팜의 상태를 한눈에 확인할 수 있습니다.
-          </FeatureDescription>
+          <FeatureTitle>{resources.dashboard}</FeatureTitle>
+          <FeatureSubtitle>{resources.dashboardSubtitle}</FeatureSubtitle>
+          <FeatureDescription>{resources.dashboardContent}</FeatureDescription>
           <FeatureCarousel
             showThumbs={false}
             showStatus={false}
@@ -335,28 +338,32 @@ export default function Home() {
               <Image
                 src="/dashboard_photo/dashboard_view.png"
                 alt="dashboard 1"
+                width={100}
+                height={100}
               />
             </div>
             <div>
               <Image
                 src="/dashboard_photo/manual_control_view.png"
                 alt="dashboard 2"
+                width={100}
+                height={100}
               />
             </div>
             <div>
               <Image
                 src="/dashboard_photo/operating_time_view.png"
                 alt="dashboard 3"
+                width={100}
+                height={100}
               />
             </div>
           </FeatureCarousel>
         </FeatureSection>
         <FeatureSection>
-          <FeatureTitle>통계</FeatureTitle>
-          <FeatureSubtitle>데이터 분석</FeatureSubtitle>
-          <FeatureDescription>
-            통계 기능을 통해 스마트팜의 성장 데이터를 분석할 수 있습니다.
-          </FeatureDescription>
+          <FeatureTitle>{resources.statistic}</FeatureTitle>
+          <FeatureSubtitle>{resources.statisticSubtitle}</FeatureSubtitle>
+          <FeatureDescription>{resources.statisticContent}</FeatureDescription>
           <FeatureCarousel
             showThumbs={false}
             showStatus={false}
@@ -375,29 +382,32 @@ export default function Home() {
               <Image
                 src="/statistic_photo/temperature_graph.png"
                 alt="statistic_photo 1"
+                width="100"
+                height="100"
               />
             </div>
             <div>
               <Image
                 src="/statistic_photo/growth_prediction.png"
                 alt="statistic_photo 2"
+                width={100}
+                height={100}
               />
             </div>
             <div>
               <Image
                 src="/statistic_photo/apple_price_prediction.png"
                 alt="statistic_photo 3"
+                width={100}
+                height={100}
               />
             </div>
           </FeatureCarousel>
         </FeatureSection>
         <FeatureSection>
-          <FeatureTitle>QnA</FeatureTitle>
-          <FeatureSubtitle>질문과 답변</FeatureSubtitle>
-          <FeatureDescription>
-            QnA 섹션에서 자주 묻는 질문들을 확인하고, 궁금한 사항을 물어볼 수
-            있습니다.
-          </FeatureDescription>
+          <FeatureTitle>{resources.qna}</FeatureTitle>
+          <FeatureSubtitle>{resources.qnaSubtitle}</FeatureSubtitle>
+          <FeatureDescription>{resources.qnaContent}</FeatureDescription>
           <FeatureCarousel
             showThumbs={false}
             showStatus={false}
@@ -413,13 +423,28 @@ export default function Home() {
             transitionTime={0}
           >
             <div>
-              <Image src="/qna_photo/qna_main.png" alt="qna 1" />
+              <Image
+                src="/qna_photo/qna_main.png"
+                alt="qna 1"
+                width={100}
+                height={100}
+              />
             </div>
             <div>
-              <Image src="/qna_photo/qna_write.png" alt="qna 2" />
+              <Image
+                src="/qna_photo/qna_write.png"
+                alt="qna 2"
+                width={100}
+                height={100}
+              />
             </div>
             <div>
-              <Image src="/qna_photo/qna_update.png" alt="qna 3" />
+              <Image
+                src="/qna_photo/qna_update.png"
+                alt="qna 3"
+                width={100}
+                height={100}
+              />
             </div>
           </FeatureCarousel>
         </FeatureSection>

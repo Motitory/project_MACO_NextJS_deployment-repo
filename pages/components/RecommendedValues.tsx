@@ -7,6 +7,8 @@ import WaterOutlinedIcon from '@mui/icons-material/WaterOutlined';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Card, CardContent, CardHeader } from '@mui/material';
+import { useLanguageResources } from '@/contexts/LanguageContext';
+import { resourceUsage } from 'process';
 
 interface Data {
   image: string;
@@ -33,6 +35,8 @@ const RecommendedValues = () => {
   const [envData, setEnvData] = useState<EnvironmentData[]>([]);
   const [latestEnvironment, setLatestEnvironment] = useState<EnvironmentData>();
 
+  const resources = useLanguageResources();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,7 +59,7 @@ const RecommendedValues = () => {
   }, [envData]);
 
   if (loading || !latestEnvironment) {
-    return <div>데이터를 불러오는 중...</div>;
+    return <div>{resources.loddingMessage}</div>;
   }
 
   const tempDifference =

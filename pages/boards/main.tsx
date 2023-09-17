@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import authRequest from '@/utils/request/authRequest';
 import { Board } from '../../interfaces/board';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 type Post = {
   board: Board;
@@ -32,6 +33,7 @@ const Boards = () => {
   const [page, setPage] = useState(1);
   const postsPerPage = 7;
   const router = useRouter();
+  const resources = useLanguageResources();
 
   const { data: user } = useQuery('user', () =>
     authRequest.get('http://localhost:8000/auth')
@@ -80,7 +82,7 @@ const Boards = () => {
                 <div className="flex flex-col">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">
-                      글 번호 : {post.id}
+                      {resources.contentNumber} : {post.id}
                       {post.status === 'PRIVATE' && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +95,8 @@ const Boards = () => {
                       )}
                     </span>
                     <span className="text-gray-600">
-                      작성자 : {post.user ? post.user.nickname : 'Unknown'}
+                      {resources.writer} :{' '}
+                      {post.user ? post.user.nickname : 'Unknown'}
                     </span>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
@@ -109,16 +112,16 @@ const Boards = () => {
                           className="post-title font-bold text-red-500"
                           onClick={(e) => {
                             e.preventDefault();
-                            window.alert('비공개 게시글입니다.');
+                            window.alert(`${resources.privateContent}`);
                           }}
                         >
-                          비공개 게시글입니다.
+                          {resources.privateContent}
                         </p>
                       </Link>
                     ) : (
                       <Link href={`/boards/show/${post.id}`}>
                         <p className="post-title font-bold text-blue-600">
-                          글 제목 : {post.title}
+                          {resources.title} : {post.title}
                         </p>
                       </Link>
                     )}
@@ -166,7 +169,7 @@ const Boards = () => {
           className="mt-4 cursor-pointer rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
           href={'/boards/create'}
         >
-          글쓰기
+          {resources.write}
         </Link>
       </div>
     </>

@@ -13,8 +13,9 @@ import {
   eachDayOfInterval,
   isThisWeek,
 } from 'date-fns';
-import { ko } from 'date-fns/locale';
+import { ko, ja } from 'date-fns/locale';
 import { UMachine } from '@/interfaces/umachine';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 type OperationTimesByDay = {
   [day: string]: {
@@ -82,13 +83,15 @@ const DashboardOperationHistory = () => {
     isLoading,
     isError,
   } = useQuery<OperationTimesByDay>('operationLog', fetchLogs);
+  const resources = useLanguageResources();
+  const currentLocal = resources.lang == 'ko' ? ko : ja;
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return <div>{resources.loddingMessage}</div>;
   }
 
   if (isError || !operationTimesByDay) {
-    return <div>작동 이력이 없습니다.</div>;
+    return <div>{resources.noOperationData}</div>;
   }
 
   const { start: startDay, end: endDay } = getWeekRange(week);
@@ -98,7 +101,7 @@ const DashboardOperationHistory = () => {
   const eachDayOfTheWeek = eachDayOfInterval({ start: startDay, end: endDay });
 
   const labels = eachDayOfTheWeek.map((day) =>
-    format(day, 'MM-dd, eee', { locale: ko })
+    format(day, 'MM-dd, eee', { locale: currentLocal })
   );
 
   const operationTypes: ('wtime1' | 'wtime2' | 'ctime')[] = [
@@ -107,7 +110,11 @@ const DashboardOperationHistory = () => {
     'ctime',
   ];
 
-  const datasets = ['관수1', '관수2', '액비'].map((type, i) => {
+  const datasets = [
+    `${resources.irrigate}1`,
+    `${resources.irrigate}2`,
+    `${resources.fertilize}`,
+  ].map((type, i) => {
     const data = eachDayOfTheWeek.map((day) => {
       const dayString = format(day, 'yyyy-MM-dd');
       return operationTimesByDay[dayString]
@@ -133,9 +140,9 @@ const DashboardOperationHistory = () => {
     datasets: datasets,
   };
 
-  const weekString = `${format(startDay, 'MM월')} ${
+  const weekString = `${format(startDay, 'MM')}${resources.month} ${
     Math.floor((startDay.getDate() - 1) / 7) + 1
-  }주차`; // 주 정보를 문자열로 변환합니다.
+  }${resources.week}`; // 주 정보를 문자열로 변환합니다.
 
   return (
     <div className="container mx-auto px-4">
@@ -147,7 +154,7 @@ const DashboardOperationHistory = () => {
             setWeek(new Date(week.getTime() - 7 * 24 * 60 * 60 * 1000))
           }
         >
-          이전 주
+          {resources.lastWeek}
         </button>
         <button
           className={`rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 ${
@@ -158,10 +165,10 @@ const DashboardOperationHistory = () => {
             setWeek(new Date(week.getTime() + 7 * 24 * 60 * 60 * 1000))
           }
         >
-          다음 주
+          {resources.nextWeek}
         </button>
       </div>
-      <h6 className="">(1분 당 : 0.5L 분사 기준)</h6>
+      <h6 className="">({resources.injectionBasis})</h6>
       <Bar
         data={data}
         options={{

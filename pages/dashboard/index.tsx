@@ -18,12 +18,14 @@ import DashboardOperationHistory from './DashboardOperationHistory';
 import GrowthRateChart from '../components/EnvironmentGrowChart';
 import SocketGrowImage from '../components/SocketGrowChart';
 import RecommendedValues from '@/pages/components/RecommendedValues';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 export default function ControlView() {
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
   const [isMeasuringLength, setIsMeasuringLength] = useState(false);
+  const resources = useLanguageResources();
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -39,34 +41,23 @@ export default function ControlView() {
     setIsVideoLoading(true);
   };
 
-  // useEffect(() => {
-  //   if (
-  //     localStorage.getItem('kakao-Name') !== 'undefined' ||
-  //     localStorage.getItem('name')
-  //   ) {
-  //     console.log('사용자 있음.');
-  //   } else {
-  //     // router.replace('/');
-  //   }
-  // }, []);
-
   return (
     <div className="flex h-full w-full flex-col p-4 md:flex-row">
       <div className="flex w-full flex-col md:mr-4 md:w-2/5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">수동 조작</h2>
+          <h2 className="text-2xl font-bold">{resources.manualControl}</h2>
           <Link href="/dashboard/manualcontrol">
             <button className="bg-blue-500 px-4 py-2 text-white">
-              <ZoomInIcon /> 상세보기
+              <ZoomInIcon /> {resources.viewDetail}
             </button>
           </Link>
         </div>
         <DashboardDirectControl />
         <div className="mt-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">스케줄</h2>
+          <h2 className="text-2xl font-bold">{resources.schedual}</h2>
           <Link href="/dashboard/ScheduleMain">
             <button className="bg-blue-500 px-4 py-2 text-white">
-              <ZoomInIcon /> 상세보기
+              <ZoomInIcon /> {resources.viewDetail}
             </button>
           </Link>
         </div>
@@ -77,47 +68,30 @@ export default function ControlView() {
           <RecommendedValues />
         </div>
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">통계</h2>
+          <h2 className="text-2xl font-bold">{resources.statistic}</h2>
           <div>
             <button
               className="mr-2 bg-orange-500 px-4 py-2 text-white"
               onClick={() => setOpenModal(true)}
             >
-              <FontAwesomeIcon icon={faVideo} /> 실시간 보기
+              <FontAwesomeIcon icon={faVideo} /> {resources.realtimeView}
             </button>
             <Link href="/statistic">
               <button className="bg-blue-500 px-4 py-2 text-white">
-                <ZoomInIcon /> 상세보기
+                <ZoomInIcon /> {resources.viewDetail}
               </button>
             </Link>
           </div>
         </div>
-        {/* <DashboardChart /> */}
         <GrowthRateChart />
-        {/* <div className="mt-4 flex items-center justify-between"> */}
-        {/* <h2 className="text-2xl font-bold">AI 예측 그래프</h2> */}
-        {/* <Link href="/sockettest">
-            <button className="bg-blue-500 px-4 py-2 text-white">
-              <ZoomInIcon /> 상세보기
-            </button>
-          </Link> */}
-        {/* </div> */}
-        {/* <div className="mt-4"> */}
-        {/* <SocketGrowImage /> */}
-        {/* </div> */}
+
         <div className="mt-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">일별 분사량</h2>
+          <h2 className="text-2xl font-bold">{resources.dailyInjection}</h2>
         </div>
         <div className="mt-4">
           <DashboardOperationHistory />
         </div>
       </div>
-      {/* <button
-        className="bg-blue-500 px-4 py-2 text-white"
-        onClick={() => setIsModalOpen(true)}
-      >
-        실시간 보기
-      </button> */}
 
       {openModal && (
         <div
@@ -129,11 +103,13 @@ export default function ControlView() {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-4 text-2xl font-bold">
-              {isMeasuringLength ? '길이 측정' : `실시간 영상`}
+              {isMeasuringLength
+                ? `${resources.measureLength}`
+                : `${resources.liveVideo}`}
             </h2>
             <div className="mb-4">
               {isVideoLoading && (
-                <p className="mb-2 text-center">로딩 중입니다...</p>
+                <p className="mb-2 text-center">{resources.loddingMessage}</p>
               )}
               <Image
                 src={
@@ -141,15 +117,21 @@ export default function ControlView() {
                     ? 'http://172.21.4.76:8001/size_feed'
                     : 'http://172.21.4.76:8001/video_feed'
                 }
-                alt={isMeasuringLength ? '길이 측정' : '실시간 영상'}
+                alt={
+                  isMeasuringLength
+                    ? `${resources.measureLength}`
+                    : `${resources.liveVideo}`
+                }
                 onLoad={() => setIsVideoLoading(false)}
+                width={640}
+                height={480}
               />
             </div>
             <button
               className="mr-2 bg-red-600 px-4 py-2 text-white"
               onClick={() => setOpenModal(false)}
             >
-              닫기
+              {resources.closeModal}
             </button>
             <button
               className={
@@ -159,7 +141,9 @@ export default function ControlView() {
               }
               onClick={toggleVideo}
             >
-              {isMeasuringLength ? '실시간 영상 보기' : '길이 측정'}
+              {isMeasuringLength
+                ? `${resources.liveVideo}`
+                : `${resources.measureLength}`}
             </button>
           </div>
         </div>

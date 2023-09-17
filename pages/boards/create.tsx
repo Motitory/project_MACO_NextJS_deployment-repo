@@ -1,12 +1,14 @@
 import authRequest from '@/utils/request/authRequest';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 const CreateBoard = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('PUBLIC');
   const router = useRouter();
+  const resources = useLanguageResources();
 
   function create() {
     console.log(status);
@@ -36,23 +38,23 @@ const CreateBoard = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="mb-8 text-4xl">글쓰기</h1>
+      <h1 className="mb-8 text-4xl">{resources.write}</h1>
       <div className="w-full max-w-2xl rounded-lg border border-gray-200 p-8">
         <div className="mb-4">
-          <p className="text-sm text-gray-500">제목</p>
+          <p className="text-sm text-gray-500">{resources.title}</p>
           <input
             className="w-full rounded-lg border border-gray-300 p-2"
-            placeholder="제목 입력"
+            placeholder={resources.titlePlaceholder}
             onChange={(e) => {
               setTitle(e.target.value);
             }}
           />
         </div>
         <div className="mb-4">
-          <p className="text-sm text-gray-500">내용</p>
+          <p className="text-sm text-gray-500">{resources.content}</p>
           <textarea
             className="h-56 w-full resize-none rounded-lg border border-gray-300 p-2"
-            placeholder="내용 입력"
+            placeholder={resources.contentPlaceholder}
             onChange={(e) => {
               setDescription(e.target.value);
             }}
@@ -68,7 +70,7 @@ const CreateBoard = () => {
                 setStatus(e.target.value);
               }}
             />
-            공개
+            {resources.public}
           </label>
           <label className="ml-4">
             <input
@@ -79,7 +81,7 @@ const CreateBoard = () => {
                 setStatus(e.target.value);
               }}
             />
-            비공개
+            {resources.private}
           </label>
         </div>
 
@@ -89,7 +91,7 @@ const CreateBoard = () => {
             onClick={handleGoBack}
             className="mr-4 cursor-pointer rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
           >
-            뒤로가기
+            {resources.goList}
           </button>
           <button
             className="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
@@ -97,7 +99,7 @@ const CreateBoard = () => {
               create();
             }}
           >
-            저장
+            {resources.write}
           </button>
         </div>
       </div>

@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { styled } from '@mui/system';
 import { Box, Typography, Paper, Grid, Chip } from '@mui/material';
 import { green, blue, grey } from '@mui/material/colors';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 const DeviceItem = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -21,6 +22,7 @@ const DashboardManualControl = () => {
   const [manualData, setManualData] = useState<MachineData[]>([]);
   const [isPosting, setIsPosting] = useState(false);
   const router = useRouter();
+  const resources = useLanguageResources();
 
   useEffect(() => {
     const fetchUMachines = async () => {
@@ -93,13 +95,13 @@ const DashboardManualControl = () => {
     >
       <Box marginTop={4}>
         <Typography variant="h4" gutterBottom>
-          기기 목록
+          {resources.deviceList}
         </Typography>
       </Box>
       <Box width="100%" maxWidth={1200} paddingBottom={4}>
         {umachines.length === 0 ? (
           <Typography variant="body1" align="center">
-            기기 로딩중입니다...
+            {resources.deviceLoadingMessage}
           </Typography>
         ) : (
           <Grid container spacing={4}>
@@ -127,15 +129,15 @@ const DashboardManualControl = () => {
                     <Grid container spacing={2} alignItems="center">
                       <Grid item xs={12} sm={6}>
                         <Typography variant="h6" fontWeight="bold" noWrap>
-                          {`기기번호 : ${umachine.device}`}
+                          {`${resources.deviceNumber} : ${umachine.device}`}
                         </Typography>
                         <Typography variant="body1" noWrap>
-                          {`위치 : ${umachine.m_address}`}
+                          {`${resources.deviceAddress} : ${umachine.m_address}`}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={3}>
                         <Chip
-                          label={`관수 1 : ${
+                          label={`${resources.irrigate} 1 : ${
                             currentManualData?.rwtime1 || 0
                           }분`}
                           sx={{
@@ -146,7 +148,7 @@ const DashboardManualControl = () => {
                           variant="outlined"
                         />
                         <Chip
-                          label={`관수 2 : ${
+                          label={`${resources.irrigate} 2 : ${
                             currentManualData?.rwtime2 || 0
                           }분`}
                           sx={{
@@ -159,7 +161,7 @@ const DashboardManualControl = () => {
                       </Grid>
                       <Grid item xs={12} sm={3}>
                         <Chip
-                          label={`액비 1 : ${
+                          label={`${resources.fertilize} 1 : ${
                             currentManualData?.rctime === 1
                               ? currentManualData?.rcval1
                               : 0
@@ -172,7 +174,7 @@ const DashboardManualControl = () => {
                           variant="outlined"
                         />
                         <Chip
-                          label={`액비 2 : ${
+                          label={`${resources.fertilize} 2 : ${
                             currentManualData?.rctime === 2
                               ? currentManualData?.rcval2
                               : 0

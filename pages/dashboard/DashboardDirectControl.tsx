@@ -5,6 +5,8 @@ import { UMachine } from '@/interfaces/umachine';
 import { Card, CardContent, Grid, Typography, Box } from '@mui/material';
 import OpacityIcon from '@mui/icons-material/Opacity';
 import MedicationIcon from '@mui/icons-material/Medication';
+import { useLanguageResources } from '@/contexts/LanguageContext';
+
 // import SpeedIcon from '@mui/icons-material/Speed';
 
 // json 읽을때 사용
@@ -30,6 +32,7 @@ interface MachineData {
 
 const DashboardDirectControl = () => {
   const [machineData, setMachineData] = useState<MachineData[]>([]);
+  const resources = useLanguageResources();
 
   useEffect(() => {
     const fetchMachineData = async () => {
@@ -65,7 +68,7 @@ const DashboardDirectControl = () => {
             <CardContent>
               <Typography variant="h5" component="div" noWrap>
                 <Box component="span" mr={1}>
-                  장치 :
+                  {resources.device} :
                 </Box>
                 <Box component="span" fontWeight="bold">
                   {machine.m_address} ({machine.device})
@@ -84,10 +87,11 @@ const DashboardDirectControl = () => {
                   >
                     <CardContent>
                       <Typography variant="body1" gutterBottom>
-                        <OpacityIcon /> 관수 1
+                        <OpacityIcon /> {resources.irrigate} 1
                       </Typography>
                       <Typography variant="h6">
-                        {Math.max(machine.rwtime1, 0)}분
+                        {Math.max(machine.rwtime1, 0)}
+                        {resources.minute}
                       </Typography>
                     </CardContent>
                   </Card>
@@ -104,10 +108,11 @@ const DashboardDirectControl = () => {
                   >
                     <CardContent>
                       <Typography variant="body1" gutterBottom>
-                        <OpacityIcon /> 관수 2
+                        <OpacityIcon /> {resources.irrigate} 2
                       </Typography>
                       <Typography variant="h6">
-                        {Math.max(machine.rwtime2, 0)}분
+                        {Math.max(machine.rwtime2, 0)}
+                        {resources.minute}
                       </Typography>
                     </CardContent>
                   </Card>
@@ -126,10 +131,11 @@ const DashboardDirectControl = () => {
                   >
                     <CardContent>
                       <Typography variant="body1" gutterBottom>
-                        <MedicationIcon /> 액비 1
+                        <MedicationIcon /> {resources.fertilize} 1
                       </Typography>
                       <Typography variant="h6">
-                        {machine.rcval1 > 0 ? Math.max(machine.rctime, 0) : 0}분
+                        {machine.rcval1 > 0 ? Math.max(machine.rctime, 0) : 0}
+                        {resources.minute}
                       </Typography>
                     </CardContent>
                   </Card>
@@ -148,10 +154,11 @@ const DashboardDirectControl = () => {
                   >
                     <CardContent>
                       <Typography variant="body1" gutterBottom>
-                        <MedicationIcon /> 액비 2
+                        <MedicationIcon /> {resources.fertilize} 2
                       </Typography>
                       <Typography variant="h6">
-                        {machine.rcval2 > 0 ? Math.max(machine.rctime, 0) : 0}분
+                        {machine.rcval2 > 0 ? Math.max(machine.rctime, 0) : 0}
+                        {resources.minute}
                       </Typography>
                     </CardContent>
                   </Card>

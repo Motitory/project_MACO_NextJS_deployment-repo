@@ -13,6 +13,7 @@ import { styled } from '@mui/system';
 import Divider from '@mui/material/Divider';
 import { useQuery } from 'react-query';
 import Image from 'next/image';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 const CustomContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -110,6 +111,7 @@ const ManualControl = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [isMeasuringLength, setIsMeasuringLength] = useState(true);
+  const resources = useLanguageResources();
 
   const fetchMachineData = async () => {
     try {
@@ -120,7 +122,7 @@ const ManualControl = () => {
       if (deviceData) {
         return deviceData;
       } else {
-        console.error('기기를 찾을 수 없습니다.');
+        console.error(`${resources.lostDevice}`);
       }
     } catch (error) {
       console.error(error);
@@ -218,38 +220,38 @@ const ManualControl = () => {
         setIsOperating((prevIsOperating) => !prevIsOperating);
         console.log(
           isOperating
-            ? '기기 가동이 정지되었습니다.'
-            : '기기 조작이 성공적으로 완료되었습니다.',
+            ? `${resources.operateStopMessage}`
+            : `${resources.operateComplete}`,
           data
         );
         alert(
           isOperating
-            ? '기기 가동이 정지되었습니다.'
-            : '기기 조작이 성공적으로 완료되었습니다.'
+            ? `${resources.operateStopMessage}`
+            : `${resources.operateComplete}`
         );
         handleOpenModal();
       } catch (error) {
-        console.error('기기 조작에 실패했습니다.', error);
-        alert('기기 조작에 실패했습니다.');
+        console.error(`${resources.operateFailAlert}`, error);
+        alert(`${resources.operateFailAlert}`);
       }
     }
   };
 
   if (isLoading || !machineData) {
-    return <div>데이터를 불러오는 중입니다...</div>;
+    return <div>${resources.loddingMessage}</div>;
   }
 
   return (
     <CustomContainer>
       <Typography variant="h4" gutterBottom align="center">
-        {`${machineData.device}기기 수동 조작`}
+        {`${machineData.device}${resources.deviceManualControl}`}
       </Typography>
       <ContentWrapper>
         <ManualControlWrapper>
           <Box marginBottom={2}>
             <TextField
               fullWidth
-              label="관수 1 : 시간(분)"
+              label={`${resources.irrigate} 1 : ${resources.time}(${resources.minute})`}
               type="number"
               // value={state.rwtime1 || ''}
               value={state.rwtime1}
@@ -265,7 +267,7 @@ const ManualControl = () => {
           <Box marginBottom={2}>
             <TextField
               fullWidth
-              label="관수 2 : 시간(분)"
+              label={`${resources.irrigate} 2 : ${resources.time}(${resources.minute})`}
               type="number"
               value={state.rwtime2}
               onChange={(event) => handleInputChange(event, 'rwtime2')}
@@ -286,7 +288,7 @@ const ManualControl = () => {
                   disabled={isOperating}
                 />
               }
-              label="액비 1"
+              label={`${resources.fertilize} 1`}
             />
             <FormControlLabel
               control={
@@ -296,13 +298,13 @@ const ManualControl = () => {
                   disabled={isOperating}
                 />
               }
-              label="액비 2"
+              label={`${resources.fertilize} 2`}
             />
           </Box>
           <Box marginBottom={2}>
             <TextField
               fullWidth
-              label="액비 작동 시간"
+              label={`${resources.fertilize} ${resources.operate} ${resources.time}`}
               type="number"
               value={state.rctime}
               onChange={(event) => handleInputChange(event, 'rctime')}
@@ -323,7 +325,9 @@ const ManualControl = () => {
               isOperating ? 'bg-red-600' : 'bg-green-600'
             } py-2 font-bold text-white`}
           >
-            {isOperating ? '가동 정지' : '가동 시작'}
+            {isOperating
+              ? `${resources.operate} ${resources.stop}`
+              : `${resources.operate} ${resources.start}`}
           </button>
         </ManualControlWrapper>
       </ContentWrapper>
@@ -338,12 +342,12 @@ const ManualControl = () => {
           >
             <h2 className="mb-4 text-2xl font-bold">
               {isMeasuringLength
-                ? '길이 측정'
-                : `실시간 영상 : ${machineData.device}`}
+                ? `${resources.measureLength}`
+                : `${resources.liveVideo} : ${machineData.device}`}
             </h2>
             <div className="mb-4">
               {isVideoLoading && (
-                <p className="mb-2 text-center">로딩 중입니다...</p>
+                <p className="mb-2 text-center">{resources.loddingMessage}</p>
               )}
               <Image
                 src={
@@ -351,15 +355,21 @@ const ManualControl = () => {
                     ? 'http://172.21.4.76:8001/size_feed'
                     : 'http://172.21.4.76:8001/video_feed'
                 }
-                alt={isMeasuringLength ? '길이 측정' : '실시간 영상'}
+                alt={
+                  isMeasuringLength
+                    ? `${resources.measureLength}`
+                    : `${resources.liveVideo}`
+                }
                 onLoad={() => setIsVideoLoading(false)}
+                width={640}
+                height={480}
               />
             </div>
             <button
               className="mr-2 bg-red-600 px-4 py-2 text-white"
               onClick={() => setOpenModal(false)}
             >
-              닫기
+              {resources.closeModal}
             </button>
             <button
               className={
@@ -369,7 +379,9 @@ const ManualControl = () => {
               }
               onClick={toggleVideo}
             >
-              {isMeasuringLength ? '실시간 영상 보기' : '길이 측정'}
+              {isMeasuringLength
+                ? `${resources.liveVideo}`
+                : `${resources.measureLength}`}
             </button>
           </div>
         </div>

@@ -17,6 +17,7 @@ import {
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 type Post = {
   board: Board;
@@ -42,6 +43,7 @@ const Boards = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [id, setId] = useState<number | null>(null);
   const router = useRouter();
+  const resources = useLanguageResources();
 
   const classes = useStyles();
 
@@ -113,7 +115,7 @@ const Boards = () => {
                   }}
                 >
                   {post.board.status === 'PRIVATE'
-                    ? '비공개 게시글'
+                    ? `${resources.privateContent}`
                     : post.board.title}
                 </TableCell>
                 <TableCell align="center">{post.board.user.nickname}</TableCell>
@@ -125,7 +127,7 @@ const Boards = () => {
       </TableContainer>
       <Link href={'/boards/create'}>
         <Button variant="contained" color="primary">
-          글쓰기
+          {resources.write}
         </Button>
       </Link>
     </>

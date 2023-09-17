@@ -3,11 +3,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Board } from '../../../interfaces/board';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 const ShowBoard = () => {
   const [board, setBoard] = useState<Board | null>(null);
   const [id, setId] = useState<number | null>(null);
   const router = useRouter();
+  const resources = useLanguageResources();
 
   const showBoard = async (boardId: number) => {
     try {
@@ -84,11 +86,11 @@ const ShowBoard = () => {
         <>
           <div className="w-full max-w-2xl rounded-lg border border-gray-200 p-8">
             <div className="mb-6">
-              <p className="text-sm text-gray-500">제목</p>
+              <p className="text-sm text-gray-500">{resources.title}</p>
               <h1 className="text-3xl text-black">{board.title}</h1>
             </div>
             <div className="mb-8">
-              <p className="text-sm text-gray-500">내용</p>
+              <p className="text-sm text-gray-500">{resources.content}</p>
               <textarea
                 className="h-56 w-full resize-none rounded-lg border border-gray-300 p-2 text-lg text-black"
                 readOnly
@@ -101,25 +103,25 @@ const ShowBoard = () => {
                 onClick={handleEditClick}
                 className="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
               >
-                수정
+                {resources.update}
               </button>
               <button
                 onClick={handleDeleteClick}
                 className="cursor-pointer rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
               >
-                삭제
+                {resources.delete}
               </button>
               <Link
                 className="cursor-pointer rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
                 href={'/boards/main'}
               >
-                목록으로
+                {resources.goList}
               </Link>
             </div>
           </div>
         </>
       ) : (
-        <p className="text-lg">게시글을 불러오는 중입니다...</p>
+        <p className="text-lg">{resources.loddingMessage}</p>
       )}
     </div>
   );

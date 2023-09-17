@@ -4,7 +4,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { useLanguage, useLanguageResources } from '@/contexts/LanguageContext'; // LanguageContext를 사용하기 위해 import
 // import logo from '@/public/maco_logo.jpg';
+
+type LanguageToggleProps = {
+  language: 'ko' | 'ja';
+};
 
 const Navbar = styled.nav`
   position: fixed;
@@ -82,6 +87,23 @@ const NavLink = styled.a`
   writing-mode: horizontal-tb;
 `;
 
+const LanguageToggle = styled.button<LanguageToggleProps>`
+  background-color: ${(props) =>
+    props.language === 'ko' ? '#c7dfe9' : '#f8d7da'};
+  color: #898787;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${(props) =>
+      props.language === 'ko' ? '#dbeff8' : '#f9e0e3'};
+  }
+`;
+
 const LOGOUT_URL = 'http://localhost:8000/auth/logout';
 
 const Page = () => {
@@ -89,6 +111,12 @@ const Page = () => {
   const { state, logout } = useAuth();
   const { isLoggedIn, userName } = state;
   const prevIsLoggedIn = useRef(isLoggedIn);
+  const { language, setLanguage } = useLanguage(); // 언어 상태와 설정 함수를 가져옵니다.
+  const resources = useLanguageResources(); // 현재 언어에 맞는 리소스를 가져옵니다.
+
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === 'ko' ? 'ja' : 'ko')); // 현재 언어를 토글합니다.
+  };
 
   useEffect(() => {
     if (prevIsLoggedIn.current !== isLoggedIn) {
@@ -138,6 +166,11 @@ const Page = () => {
                 <p className="font-bold text-white">Sign In</p>
               </Link>
             )}
+          </NavItem>
+          <NavItem>
+            <LanguageToggle language={language} onClick={toggleLanguage}>
+              {language === 'ko' ? '日本語' : '한국어'}
+            </LanguageToggle>
           </NavItem>
         </NavLinks>
       </Navbar>

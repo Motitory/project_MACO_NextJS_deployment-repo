@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import authRequest from '@/utils/request/authRequest';
 import { Board } from '@/interfaces/board';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 const EditBoard = () => {
   const router = useRouter();
@@ -10,6 +11,7 @@ const EditBoard = () => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [id, setId] = useState<number>(1);
+  const resources = useLanguageResources();
 
   useEffect(() => {
     const fetchBoard = async () => {
@@ -141,13 +143,13 @@ const EditBoard = () => {
                 onClick={handleGoBack}
                 className="mr-4 cursor-pointer rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
               >
-                뒤로가기
+                {resources.goList}
               </button>
               <button
                 type="submit"
                 className="mr-4 cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
               >
-                수정
+                {resources.update}
               </button>
               {id === 2 ? (
                 <button
@@ -164,7 +166,7 @@ const EditBoard = () => {
           </div>
         </form>
       ) : (
-        <p>게시글을 불러오는 중입니다...</p>
+        <p>{resources.loddingMessage}</p>
       )}
     </div>
   );

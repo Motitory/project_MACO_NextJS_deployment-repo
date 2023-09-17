@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 type ScheduleData = {
   sc_id: number;
@@ -35,6 +36,7 @@ const DashboardSchedule = () => {
   const [scheduleData, setScheduleData] = useState<ScheduleData[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 3;
+  const resources = useLanguageResources();
 
   useEffect(() => {
     const getData = async () => {
@@ -74,39 +76,46 @@ const DashboardSchedule = () => {
         className="mb-4 grid grid-cols-2 gap-2 rounded-lg border border-gray-300 p-4"
       >
         <div className="col-span-2">
-          <h4 className="mb-2 text-xl font-semibold">스케줄 ID: {sc_id}</h4>
+          <h4 className="mb-2 text-xl font-semibold">
+            {resources.schedual} ID: {sc_id}
+          </h4>
         </div>
         <div className="col-span-2">
           <p className="mb-2">
-            {sun && '일'} {mon && '월'} {tue && '화'} {wed && '수'}{' '}
-            {thur && '목'} {fri && '금'} {sat && '토'}
+            {sun && `${resources.sun}`} {mon && `${resources.mon}`}{' '}
+            {tue && `${resources.tue}`} {wed && `${resources.wed}`}{' '}
+            {thur && `${resources.thu}`} {fri && `${resources.fri}`}{' '}
+            {sat && `${resources.sat}`}
           </p>
         </div>
         <div>
-          <span className="font-semibold">시작 시간:</span> {hour}시 {min}분
+          <span className="font-semibold">시작 시간:</span> {hour}
+          {resources.time} {min}
+          {resources.minute}
         </div>
         <div>
-          <span className="font-semibold">종료 시간:</span> {endHour}시 {endMin}
-          분
+          <span className="font-semibold">종료 시간:</span> {endHour}
+          {resources.time} {endMin}
+          {resources.minute}
         </div>
         <div>
-          <span className="font-semibold">관수:</span>{' '}
+          <span className="font-semibold">{resources.irrigate}:</span>{' '}
           <span
             className={`font-semibold ${
               wval ? 'text-green-500' : 'text-red-500'
             }`}
           >
-            {wval ? '켜짐' : '꺼짐'}
+            {wval ? `${resources.on}` : `${resources.off}`}
           </span>
         </div>
         <div>
-          <span className="font-semibold">액비:</span>{' '}
+          <span className="font-semibold">{resources.fertilize}:</span>{' '}
           <span
             className={`font-semibold ${
               cval ? 'text-green-500' : 'text-red-500'
             }`}
           >
-            {cval ? '켜짐' : '꺼짐'}
+            {cval ? `${resources.on}` : `${resources.off}`}
           </span>
         </div>
       </div>

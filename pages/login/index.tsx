@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { kakaoInit } from '@/utils/kakao/kakaoinit';
 import * as Kakao from 'kakao-sdk';
 import dynamic from 'next/dynamic';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 const SERVER_URL_SIGN_IN = 'http://localhost:8000/auth/signin';
 const SERVER_URL_SIGN_UP = 'http://localhost:8000/auth/signup';
@@ -17,6 +18,7 @@ export default function Login() {
   const router = useRouter();
   const { login } = useAuth();
   const [kakao, setKakao] = useState<any>(null);
+  const resources = useLanguageResources();
 
   useEffect(() => {
     const loadKakaoSDK = async () => {
@@ -72,12 +74,12 @@ export default function Login() {
                 });
             },
             fail: (error: any) => {
-              console.log(`${error} 로그인 자체가 실패`);
+              console.log(`${error} ${resources.kakaoLoginFail}`);
             },
           });
         },
         fail: (error: any) => {
-          console.log(`${error} 로그인 자체가 실패`);
+          console.log(`${error} ${resources.kakaoLoginFail}`);
         },
       });
     }
@@ -101,7 +103,7 @@ export default function Login() {
               className="rounded border border-yellow-600 bg-yellow-500 px-4 py-2 font-bold text-white transition duration-200 ease-in-out hover:border-yellow-800 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-opacity-50"
               onClick={kakaoLogin}
             >
-              카카오로그인
+              {resources.kakaoLogin}
             </button>
           </div>
         </div>

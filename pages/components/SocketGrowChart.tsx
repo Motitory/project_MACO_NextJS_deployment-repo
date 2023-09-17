@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSocketData } from '@/utils/socket';
 import Image from 'next/image';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 interface Data {
   image: string;
@@ -15,15 +16,16 @@ const SocketGrowImage = () => {
   const URL = 'ws://172.21.4.76:8002/grow';
   const dataKeys = ['image', 'recommended', 'prediction'];
   const { data, loading } = useSocketData<Data>(URL, dataKeys);
+  const resources = useLanguageResources();
 
   if (loading) {
-    return <div>데이터를 불러오는 중...</div>;
+    return <div>{resources.loddingMessage}</div>;
   }
 
   return (
     <div>
       <h2 className="clip-right mb-4 ml-4 mt-8 w-1/5 rounded-l border border-orange-300 bg-teal-200 p-2 text-2xl font-bold">
-        생장 과정 그래프
+        {resources.growPredictChart}
       </h2>
       <Image
         src={`data:image/png;base64,${data.image}`}

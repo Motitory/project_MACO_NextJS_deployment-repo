@@ -14,6 +14,8 @@ import { GetStaticProps } from 'next';
 import MakeSchedule from './MakeSchedule';
 import { useRouter } from 'next/router';
 
+import { useLanguageResources } from '@/contexts/LanguageContext';
+
 // import scheduleData from '/scheduleMock.json';
 
 const SERVER_URL = 'http://localhost:8000/irrigation';
@@ -75,6 +77,8 @@ function ScheduleMain({ data }: { data: Schedule[] }) {
   const [sortedData, setSortedData] = useState<Schedule[]>([]);
 
   const router = useRouter();
+
+  const resources = useLanguageResources();
 
   useEffect(() => {
     const fetchData = async () => {

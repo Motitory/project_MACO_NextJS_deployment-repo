@@ -3,6 +3,7 @@ import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import authRequest from '@/utils/request/authRequest';
 import { Chart, Plugin } from 'chart.js';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 interface TemperatureChartData {
   id: number;
@@ -15,6 +16,7 @@ interface TemperatureChartData {
 
 const TemperatureChart: React.FC = () => {
   const [data, setData] = useState<TemperatureChartData[]>([]);
+  const resources = useLanguageResources();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,9 +40,9 @@ const TemperatureChart: React.FC = () => {
   ) => {
     const labels = data.map((item) => {
       const date = new Date(item.created_at);
-      return `${
-        date.getMonth() + 1
-      }월 ${date.getDate()}일 ${date.getHours()}시`;
+      return `${date.getMonth() + 1}${resources.month} ${date.getDate()}${
+        resources.date
+      } ${date.getHours()}${resources.hour}`;
     });
     const chartData = data.map((item) => item[dataKey]);
 
@@ -48,7 +50,7 @@ const TemperatureChart: React.FC = () => {
       labels,
       datasets: [
         {
-          label: '온도 (°C)',
+          label: `${resources.temp} (°C)`,
           data: chartData,
           backgroundColor: 'transparent',
           borderColor,
@@ -101,7 +103,7 @@ const TemperatureChart: React.FC = () => {
   return (
     <div>
       <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-blue-300 bg-lime-200 p-2 text-2xl font-bold">
-        온도 그래프
+        {resources.tempGraph}
       </h2>
       <Line
         data={chartData}

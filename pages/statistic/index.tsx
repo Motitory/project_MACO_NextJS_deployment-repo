@@ -5,8 +5,10 @@ import EnvironmentGrowChart from '@/pages/components/EnvironmentGrowChart';
 import SocketGrowChart from '@/pages/components/SocketGrowChart';
 import SocketAppleChart from '@/pages/components/SocketAppleChart';
 import SocketPearChart from '@/pages/components/SocketPearChart';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 const StatisticPage: React.FC = () => {
+  const resources = useLanguageResources();
   const [activeChart, setActiveChart] = useState<
     | 'temperature'
     | 'humidity'
@@ -40,7 +42,7 @@ const StatisticPage: React.FC = () => {
       </div>
       <div className="flex w-1/4 flex-col items-center bg-slate-50 p-4">
         <h2 className="my-8 rounded border-2 border-gray-300 text-2xl font-bold">
-          차트 선택
+          {resources.chooseChart}
         </h2>
         <button
           onClick={() => handleClick('temperature')}
@@ -50,7 +52,7 @@ const StatisticPage: React.FC = () => {
               : 'bg-lime-300 hover:bg-lime-400'
           }`}
         >
-          온도 차트
+          {resources.tempChart}
         </button>
         <button
           onClick={() => handleClick('humidity')}
@@ -60,7 +62,7 @@ const StatisticPage: React.FC = () => {
               : 'bg-green-300 hover:bg-green-400'
           }`}
         >
-          습도 차트
+          {resources.humidChart}
         </button>
         <button
           onClick={() => handleClick('EnvironmentGrow')}
@@ -70,7 +72,7 @@ const StatisticPage: React.FC = () => {
               : 'bg-emerald-300 hover:bg-emerald-400'
           }`}
         >
-          생장 차트
+          {resources.growChart}
         </button>
         <button
           onClick={() => handleClick('SocketGrow')}
@@ -80,7 +82,7 @@ const StatisticPage: React.FC = () => {
               : 'bg-teal-300 hover:bg-teal-400'
           }`}
         >
-          생장 과정 예측 차트
+          {resources.growPredictChart}
         </button>
         <button
           onClick={() => handleClick('SocketApple')}
@@ -90,7 +92,7 @@ const StatisticPage: React.FC = () => {
               : 'bg-cyan-300 hover:bg-cyan-400'
           }`}
         >
-          사과 가격 예측 차트
+          {resources.applePricePredictChart}
         </button>
         <button
           onClick={() => handleClick('SocketPear')}
@@ -100,7 +102,7 @@ const StatisticPage: React.FC = () => {
               : 'bg-sky-300 hover:bg-sky-400'
           }`}
         >
-          배 가격 예측 차트
+          {resources.pearPricePredictChart}
         </button>
       </div>
     </div>

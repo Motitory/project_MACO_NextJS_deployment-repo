@@ -4,14 +4,16 @@ import { useEffect, useState } from 'react';
 import { AppProps } from 'next/app';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { AuthProvider } from '../contexts/AuthContext';
-import NavBar from './components/navbar';
-import NavBar2 from './components/navbar2';
-import Footer from './components/footer';
+import NavBar from '@/pages/components/navbar';
+import NavBar2 from '@/pages/components/navbar2';
+import Footer from '@/pages/components/footer';
 import { Suspense } from 'react';
-import MiddleSection from './middleSection';
+import MiddleSection from '@/pages/middleSection';
 import { useRouter } from 'next/router';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
+
+import { LanguageProvider } from '../contexts/LanguageContext';
 
 import '@/styles/custom.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -67,21 +69,23 @@ export default function App({
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         {/* <ParallaxProvider> */}
-        <Head>
-          <script
-            src="https://developers.kakao.com/sdk/js/kakao.js"
-            async
-          ></script>
-        </Head>
-        <Suspense fallback={<div>Loading...</div>}></Suspense>
-        <AuthProvider>
-          {/* <NavBar weather={weatherData} address={addressData?.address} /> */}
-          {hideNavbar ? <NavBar2 /> : <NavBar />}
-          {/* {hideNavbar ? <></> : <NavBar />} */}
-          <Component {...pageProps} />
-          {/* <Footer /> */}
-          {/* </ParallaxProvider> */}
-        </AuthProvider>
+        <LanguageProvider>
+          <Head>
+            <script
+              src="https://developers.kakao.com/sdk/js/kakao.js"
+              async
+            ></script>
+          </Head>
+          <Suspense fallback={<div>Loading...</div>}></Suspense>
+          <AuthProvider>
+            {/* <NavBar weather={weatherData} address={addressData?.address} /> */}
+            {hideNavbar ? <NavBar2 /> : <NavBar />}
+            {/* {hideNavbar ? <></> : <NavBar />} */}
+            <Component {...pageProps} />
+            {/* <Footer /> */}
+            {/* </ParallaxProvider> */}
+          </AuthProvider>
+        </LanguageProvider>
       </QueryClientProvider>
     </SessionProvider>
   );

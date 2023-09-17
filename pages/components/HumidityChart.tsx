@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import authRequest from '@/utils/request/authRequest';
+import { useLanguageResources } from '@/contexts/LanguageContext';
 
 interface HumidityChartData {
   id: number;
@@ -14,6 +15,7 @@ interface HumidityChartData {
 
 const HumidityChart: React.FC = () => {
   const [data, setData] = useState<HumidityChartData[]>([]);
+  const resources = useLanguageResources();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,9 +39,9 @@ const HumidityChart: React.FC = () => {
   ) => {
     const labels = data.map((item) => {
       const date = new Date(item.created_at);
-      return `${
-        date.getMonth() + 1
-      }월 ${date.getDate()}일 ${date.getHours()}시`;
+      return `${date.getMonth() + 1}${resources.month} ${date.getDate()}${
+        resources.date
+      } ${date.getHours()}${resources.time}`;
     });
     const chartData = data.map((item) => item[dataKey]);
     const backgroundColors = data.map((item) =>
@@ -54,7 +56,7 @@ const HumidityChart: React.FC = () => {
       labels,
       datasets: [
         {
-          label: '습도(%)',
+          label: `${resources.humid}(%)`,
           data: chartData,
           backgroundColor: backgroundColors,
           borderColor,
@@ -80,7 +82,7 @@ const HumidityChart: React.FC = () => {
   return (
     <div>
       <h2 className="clip-right mb-4 mt-8 ml-4 w-1/5 rounded-l border border-green-300 bg-green-200 p-2 text-2xl font-bold">
-        습도 그래프
+        {resources.humidChart}
       </h2>
       <Line data={chartData} />
     </div>
