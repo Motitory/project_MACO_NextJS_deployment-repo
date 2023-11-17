@@ -13,7 +13,7 @@ interface Data {
 }
 
 const SocketGrowImage = () => {
-  const URL = 'ws://172.21.4.76:8002/grow';
+  const URL = process.env.NEXT_PUBLIC_WS_URL + ':8002/grow';
   const dataKeys = ['image', 'recommended', 'prediction'];
   const { data, loading } = useSocketData<Data>(URL, dataKeys);
   const resources = useLanguageResources();
@@ -30,6 +30,8 @@ const SocketGrowImage = () => {
       <Image
         src={`data:image/png;base64,${data.image}`}
         alt="생장 과정 예측 이미지"
+        width={1000}
+        height={1000}
       />
     </div>
   );

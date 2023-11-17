@@ -69,7 +69,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem('name', userName);
     localStorage.setItem(
       'expirationTime',
-      (Date.now() + 60 * 60 * 1000).toString()
+      // (Date.now() + 60 * 60 * 1000).toString()
+      (Date.now() + 60 * 60 * 1000 * 600).toString()
     );
     dispatch({ type: 'LOGIN', payload: userName });
   }, []);

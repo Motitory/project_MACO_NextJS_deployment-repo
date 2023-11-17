@@ -12,8 +12,13 @@ import Container from '@mui/material/Container';
 import { styled } from '@mui/system';
 import Divider from '@mui/material/Divider';
 import { useQuery } from 'react-query';
-import Image from 'next/image';
+import Image, { ImageLoaderProps } from 'next/image';
 import { useLanguageResources } from '@/contexts/LanguageContext';
+
+const baseURL = process.env.NEXT_PUBLIC_LOCAL_HTTP_URL;
+
+const sizeFeedURL = `${baseURL}:8001/size_feed`;
+const videoFeedURL = `${baseURL}:8001/video_feed`;
 
 const CustomContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -74,6 +79,21 @@ const DividerWrapper = styled('div')({
   margin: '16px 0',
 });
 
+const myLoader = (
+  { src, width, quality }: ImageLoaderProps,
+  isMeasuringLength: boolean
+): string => {
+  const baseQuality = quality || 75;
+
+  if (isMeasuringLength) {
+    return `${sizeFeedURL}?w=${width}&q=${baseQuality}`;
+  } else {
+    return `${videoFeedURL}?w=${width}&q=${baseQuality}`;
+  }
+};
+console.log(sizeFeedURL);
+console.log(videoFeedURL);
+
 type ActionType =
   | { type: 'UPDATE_MACHINE_DATA'; key: keyof MachineData; value: any }
   | { type: 'INIT_MACHINE_DATA'; data: MachineData }
@@ -109,8 +129,8 @@ const ManualControl = () => {
   const { device } = router.query;
   const [isOperating, setIsOperating] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState(false);
-  const [isVideoLoading, setIsVideoLoading] = useState(false);
-  const [isMeasuringLength, setIsMeasuringLength] = useState(true);
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
+  const [isMeasuringLength, setIsMeasuringLength] = useState(false);
   const resources = useLanguageResources();
 
   const fetchMachineData = async () => {
@@ -224,15 +244,15 @@ const ManualControl = () => {
             : `${resources.operateComplete}`,
           data
         );
-        alert(
-          isOperating
-            ? `${resources.operateStopMessage}`
-            : `${resources.operateComplete}`
-        );
+        // alert(
+        //   isOperating
+        //     ? `${resources.operateStopMessage}`
+        //     : `${resources.operateComplete}`
+        // );
         handleOpenModal();
       } catch (error) {
         console.error(`${resources.operateFailAlert}`, error);
-        alert(`${resources.operateFailAlert}`);
+        // alert(`${resources.operateFailAlert}`);
       }
     }
   };
@@ -337,52 +357,61 @@ const ManualControl = () => {
           onClick={() => setOpenModal(false)}
         >
           <div
-            className="w-full max-w-2xl rounded-lg bg-white p-4"
+            className="w-full max-w-4xl rounded-lg bg-white p-4" // max-w-4xl 또는 더 큰 크기로 조정
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="mb-4 text-2xl font-bold">
+            <h2 className="mb-4 text-3xl font-bold">
+              {' '}
+              {/* text-3xl로 텍스트 크기를 증가 */}
               {isMeasuringLength
                 ? `${resources.measureLength}`
-                : `${resources.liveVideo} : ${machineData.device}`}
+                : `${resources.liveVideo}`}
             </h2>
-            <div className="mb-4">
-              {isVideoLoading && (
-                <p className="mb-2 text-center">{resources.loddingMessage}</p>
-              )}
+            {/* <div className="mb-4 flex justify-center">
               <Image
-                src={
-                  isMeasuringLength
-                    ? 'http://172.21.4.76:8001/size_feed'
-                    : 'http://172.21.4.76:8001/video_feed'
-                }
+                loader={(props) => myLoader(props, isMeasuringLength)}
+                src={isMeasuringLength ? sizeFeedURL : videoFeedURL}
                 alt={
                   isMeasuringLength
                     ? `${resources.measureLength}`
                     : `${resources.liveVideo}`
                 }
                 onLoad={() => setIsVideoLoading(false)}
-                width={640}
-                height={480}
+                width={800} // 가로 크기 증가
+                height={600} // 세로 크기 증가
+                className="object-cover"
               />
+            </div> */}
+            <video
+              className="my-4 h-auto w-full" // This will make the video responsive and add vertical margin
+              loop
+              autoPlay
+              // controls // It's a good idea to include controls
+            >
+              <source src="/operation_2x.mp4" type="video/mp4" />
+            </video>
+            <div className="flex justify-end space-x-2">
+              {' '}
+              {/* 버튼을 오른쪽 정렬 */}
+              <button
+                className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                onClick={() => setOpenModal(false)}
+              >
+                {resources.closeModal}
+              </button>
+              <button
+                className={
+                  isMeasuringLength
+                    ? 'rounded bg-orange-600 px-4 py-2 text-white'
+                    : 'rounded bg-pink-600 px-4 py-2 text-white'
+                }
+                // onClick={toggleVideo}
+              >
+                {isMeasuringLength
+                  ? `${resources.liveVideo}`
+                  : `${resources.measureLength}`}
+              </button>
             </div>
-            <button
-              className="mr-2 bg-red-600 px-4 py-2 text-white"
-              onClick={() => setOpenModal(false)}
-            >
-              {resources.closeModal}
-            </button>
-            <button
-              className={
-                isMeasuringLength
-                  ? 'bg-orange-600 px-4 py-2 text-white'
-                  : 'bg-pink-600 px-4 py-2 text-white'
-              }
-              onClick={toggleVideo}
-            >
-              {isMeasuringLength
-                ? `${resources.liveVideo}`
-                : `${resources.measureLength}`}
-            </button>
           </div>
         </div>
       )}

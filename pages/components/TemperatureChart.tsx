@@ -108,6 +108,7 @@ const TemperatureChart: React.FC = () => {
       <Line
         data={chartData}
         options={{
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
           plugins: {
             legend: {
               labels: {

@@ -35,7 +35,7 @@ function createChartData(
         label: `${resources.length} (cm)`,
         data: chartData,
         borderColor,
-        borderWidth: 1,
+        borderWidth: 3,
         fill: false,
       },
     ],
@@ -69,12 +69,7 @@ const GrowthRateChart: React.FC = () => {
         {resources.growChart}
       </h2>
       <Line
-        data={createChartData(
-          growFilteredData,
-          'grow',
-          'rgba(75, 192, 192, 1)',
-          resources
-        )}
+        data={createChartData(growFilteredData, 'grow', '#4bc097', resources)}
         options={{
           plugins: {
             legend: {

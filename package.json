@@ -55,6 +55,7 @@
     "react-scroll-section": "^3.2.5",
     "react-slick": "^0.29.0",
     "react-youtube": "^10.1.0",
+    "sharp": "^0.32.6",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.6.1",
     "styled-components": "^5.3.6",

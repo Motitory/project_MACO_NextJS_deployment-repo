@@ -103,7 +103,7 @@ const Boards = () => {
                     {post.user?.id === userId || userId === 2 ? (
                       <Link href={`/boards/show/${post.id}`}>
                         <p className="post-title font-bold text-blue-600">
-                          글 제목 : {post.title}
+                          {resources.title} : {post.title}
                         </p>
                       </Link>
                     ) : post.status === 'PRIVATE' ? (

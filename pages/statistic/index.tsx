@@ -5,6 +5,8 @@ import EnvironmentGrowChart from '@/pages/components/EnvironmentGrowChart';
 import SocketGrowChart from '@/pages/components/SocketGrowChart';
 import SocketAppleChart from '@/pages/components/SocketAppleChart';
 import SocketPearChart from '@/pages/components/SocketPearChart';
+import JsonSocketAppleChart from '@/pages/components/JsonAppleChart';
+import SocketAppleScheduleChart from '@/pages/components/SocketAppleScheduleChart';
 import { useLanguageResources } from '@/contexts/LanguageContext';
 
 const StatisticPage: React.FC = () => {
@@ -16,6 +18,8 @@ const StatisticPage: React.FC = () => {
     | 'SocketGrow'
     | 'SocketApple'
     | 'SocketPear'
+    | 'JsonSocketApple'
+    | 'SocketAppleSchedule'
   >('temperature');
 
   const handleClick = (
@@ -26,6 +30,8 @@ const StatisticPage: React.FC = () => {
       | 'SocketGrow'
       | 'SocketApple'
       | 'SocketPear'
+      | 'JsonSocketApple'
+      | 'SocketAppleSchedule'
   ) => {
     setActiveChart(chart);
   };
@@ -36,9 +42,11 @@ const StatisticPage: React.FC = () => {
         {activeChart === 'temperature' && <TemperatureChart />}
         {activeChart === 'humidity' && <HumidityChart />}
         {activeChart === 'EnvironmentGrow' && <EnvironmentGrowChart />}
-        {activeChart === 'SocketGrow' && <SocketGrowChart />}
+        {/* {activeChart === 'SocketGrow' && <SocketGrowChart />} */}
         {activeChart === 'SocketApple' && <SocketAppleChart />}
         {activeChart === 'SocketPear' && <SocketPearChart />}
+        {activeChart === 'JsonSocketApple' && <JsonSocketAppleChart />}
+        {activeChart === 'SocketAppleSchedule' && <SocketAppleScheduleChart />}
       </div>
       <div className="flex w-1/4 flex-col items-center bg-slate-50 p-4">
         <h2 className="my-8 rounded border-2 border-gray-300 text-2xl font-bold">
@@ -75,14 +83,26 @@ const StatisticPage: React.FC = () => {
           {resources.growChart}
         </button>
         <button
-          onClick={() => handleClick('SocketGrow')}
+          // onClick={() => handleClick('SocketGrow')}
+          onClick={() => handleClick('JsonSocketApple')}
           className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
-            activeChart === 'SocketGrow'
+            // activeChart === 'SocketGrow'
+            activeChart === 'JsonSocketApple'
               ? 'bg-teal-500'
               : 'bg-teal-300 hover:bg-teal-400'
           }`}
         >
           {resources.growPredictChart}
+        </button>
+        <button
+          onClick={() => handleClick('JsonSocketApple')}
+          className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
+            activeChart === 'JsonSocketApple'
+              ? 'bg-sky-500'
+              : 'bg-sky-300 hover:bg-sky-400'
+          }`}
+        >
+          {resources.JsonPredictionChart}
         </button>
         <button
           onClick={() => handleClick('SocketApple')}
@@ -103,6 +123,16 @@ const StatisticPage: React.FC = () => {
           }`}
         >
           {resources.pearPricePredictChart}
+        </button>
+        <button
+          onClick={() => handleClick('SocketAppleSchedule')}
+          className={`mb-16 w-full rounded py-2 px-4 font-semibold text-white ${
+            activeChart === 'SocketAppleSchedule'
+              ? 'bg-violet-500'
+              : 'bg-violet-300 hover:bg-violet-400'
+          }`}
+        >
+          {resources.applePricePredictChart}
         </button>
       </div>
     </div>

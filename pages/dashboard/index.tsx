@@ -20,12 +20,22 @@ import SocketGrowImage from '../components/SocketGrowChart';
 import RecommendedValues from '@/pages/components/RecommendedValues';
 import { useLanguageResources } from '@/contexts/LanguageContext';
 
+type ImageLoaderProps = {
+  src: string;
+  width: number;
+  quality?: number;
+};
+
 export default function ControlView() {
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
   const [isMeasuringLength, setIsMeasuringLength] = useState(false);
   const resources = useLanguageResources();
+  const baseURL = process.env.NEXT_PUBLIC_LOCAL_HTTP_URL;
+
+  const sizeFeedURL = `${baseURL}:8001/size_feed`;
+  const videoFeedURL = `${baseURL}:8001/video_feed`;
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -41,8 +51,23 @@ export default function ControlView() {
     setIsVideoLoading(true);
   };
 
+  const myLoader = (
+    { src, width, quality }: ImageLoaderProps,
+    isMeasuringLength: boolean
+  ): string => {
+    const baseQuality = quality || 75;
+
+    if (isMeasuringLength) {
+      return `${sizeFeedURL}?w=${width}&q=${baseQuality}`;
+    } else {
+      return `${videoFeedURL}?w=${width}&q=${baseQuality}`;
+    }
+  };
+  console.log(sizeFeedURL);
+  console.log(videoFeedURL);
+
   return (
-    <div className="flex h-full w-full flex-col p-4 md:flex-row">
+    <div className="flex h-full w-full flex-col bg-[#ebede6] p-4 md:flex-row">
       <div className="flex w-full flex-col md:mr-4 md:w-2/5">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold">{resources.manualControl}</h2>
@@ -67,7 +92,7 @@ export default function ControlView() {
         <div className="flex items-center justify-between">
           <RecommendedValues />
         </div>
-        <div className="flex items-center justify-between">
+        <div className="mt-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold">{resources.statistic}</h2>
           <div>
             <button
@@ -99,52 +124,53 @@ export default function ControlView() {
           onClick={() => setOpenModal(false)}
         >
           <div
-            className="w-full max-w-2xl rounded-lg bg-white p-4"
+            className="w-full max-w-4xl rounded-lg bg-white p-4" // max-w-4xl 또는 더 큰 크기로 조정
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="mb-4 text-2xl font-bold">
+            <h2 className="mb-4 text-3xl font-bold">
+              {' '}
+              {/* text-3xl로 텍스트 크기를 증가 */}
               {isMeasuringLength
                 ? `${resources.measureLength}`
                 : `${resources.liveVideo}`}
             </h2>
-            <div className="mb-4">
-              {isVideoLoading && (
-                <p className="mb-2 text-center">{resources.loddingMessage}</p>
-              )}
+            <div className="mb-4 flex justify-center">
               <Image
-                src={
-                  isMeasuringLength
-                    ? 'http://172.21.4.76:8001/size_feed'
-                    : 'http://172.21.4.76:8001/video_feed'
-                }
+                loader={(props) => myLoader(props, isMeasuringLength)}
+                src={isMeasuringLength ? sizeFeedURL : videoFeedURL}
                 alt={
                   isMeasuringLength
                     ? `${resources.measureLength}`
                     : `${resources.liveVideo}`
                 }
                 onLoad={() => setIsVideoLoading(false)}
-                width={640}
-                height={480}
+                width={800} // 가로 크기 증가
+                height={600} // 세로 크기 증가
+                className="object-cover"
               />
             </div>
-            <button
-              className="mr-2 bg-red-600 px-4 py-2 text-white"
-              onClick={() => setOpenModal(false)}
-            >
-              {resources.closeModal}
-            </button>
-            <button
-              className={
-                isMeasuringLength
-                  ? 'bg-orange-600 px-4 py-2 text-white'
-                  : 'bg-pink-600 px-4 py-2 text-white'
-              }
-              onClick={toggleVideo}
-            >
-              {isMeasuringLength
-                ? `${resources.liveVideo}`
-                : `${resources.measureLength}`}
-            </button>
+            <div className="flex justify-end space-x-2">
+              {' '}
+              {/* 버튼을 오른쪽 정렬 */}
+              <button
+                className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                onClick={() => setOpenModal(false)}
+              >
+                {resources.closeModal}
+              </button>
+              <button
+                className={
+                  isMeasuringLength
+                    ? 'rounded bg-orange-600 px-4 py-2 text-white'
+                    : 'rounded bg-pink-600 px-4 py-2 text-white'
+                }
+                // onClick={toggleVideo}
+              >
+                {isMeasuringLength
+                  ? `${resources.liveVideo}`
+                  : `${resources.measureLength}`}
+              </button>
+            </div>
           </div>
         </div>
       )}

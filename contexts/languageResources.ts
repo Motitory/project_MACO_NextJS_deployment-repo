@@ -70,6 +70,16 @@ export const resources = {
     dailyInjection: '일별 분사량',
     schedual: '스케줄',
     device: '장치',
+    recommandTemp: '추천 온도(25℃)',
+    recommandHumid: '추천 습도(70%)',
+    asMany: '만큼',
+    picture: '사진',
+    video: '영상',
+    showPicture: '사진 보기',
+    showVideo: '영상 보기',
+    addWater: '수분량이 부족합니다. 물을 더 주어야합니다.',
+    upper: '올려야합니다.',
+    lower: '내려야합니다.',
     // --------------------------------------------
     // schedule
     mon: '월',
@@ -81,6 +91,11 @@ export const resources = {
     sun: '일',
     on: '켜짐',
     off: '꺼짐',
+    startTime: '시작 시간',
+    endTime: '종료 시간',
+    amount: '양',
+    dayOfWeek: '요일',
+    updateApplied: '수정이 적용되었습니다.',
     // --------------------------------------------
     // graph
     tempGraph: '온도 그래프',
@@ -104,6 +119,9 @@ export const resources = {
     lastWeek: '이전 주',
     nextWeek: '다음 주',
     injectionBasis: '1분 당 : 0.5L 분사 기준',
+    irrigationSchedule: '관수 스케줄',
+    JsonPredictionChart: '가격 예측 차트',
+    JsonPredictionChartTitle: '토마토 가격 예측 차트',
     // --------------------------------------------
     // qna
     write: '글쓰기',
@@ -120,6 +138,7 @@ export const resources = {
     public: '공개',
     private: '비공개',
     // --------------------------------------------
+    close: '닫기',
   },
   ja: {
     lang: 'ja',
@@ -130,15 +149,15 @@ export const resources = {
     loginTimeout: 'ログイン時間が切れました。',
     agriWhat: 'アグリードとは？',
     smartFarmSystem: '「スマートファーム管理システム」',
-    bigDataAI: 'ビッグデータとAIを使用して環境による成長分析を行い、',
-    userEasyCultivate: 'ユーザーが簡単に栽培できるサービスです。',
+    bigDataAI: 'ビッグデータとAIを使用して生育環境の分析を行い、',
+    userEasyCultivate: 'ユーザーが簡単に作物を栽培できるサービスです。',
     qualityResourceSave: '品質向上とリソースの節約',
     qualityResourceSaveContent:
-      '「さらに、スマートファーム技術を活用することで、作物の品質を向上させ、作物に必要な水、肥料、農薬の使用量を減らすことができます。このような革新的な方法で、農業と環境の持続可能性を高めることができます」。',
+      'さらに、スマートファーム技術を活用することで、作物の品質を向上させ、作物に必要な水、肥料、農薬の使用量を減らすことができます。このような革新的な方法で、農業の持続可能性を高めることができます。',
     ecoFriendlySmartFarm: '環境に優しいスマートファーム',
     newParadigm: '環境に優しい農業の新しいパラダイム',
     newParadigmContent:
-      'スマートファームは、植物の成長環境を最適化し、農作物の品質向上と資源節約を実現できる次世代農業技術です。 これにより、環境への悪影響を減らし、持続可能な農業の発展を実現することができます。一緒にスマートファームでより良い未来を作りましょう！」',
+      'スマートファームは、作物の成長環境を最適化し、農作物の品質向上と資源節約を実現できる次世代農業技術です。 これにより、環境への悪影響を減らし、持続可能な農業の発展を実現することができます。一緒にスマートファームでより良い未来を作りましょう！',
     smartFarmIntroVideo: 'スマートファーム紹介ビデオ',
     controller: 'コントローラー',
     convenienceFeatures: '「便利な機能」',
@@ -188,9 +207,19 @@ export const resources = {
     manualControl: '手動操作',
     viewDetail: '詳細を見る',
     realtimeView: 'リアルタイムビュー',
-    dailyInjection: '日別注入量',
+    dailyInjection: '日別水やり量',
     schedual: 'スケジュール',
     device: 'デバイス',
+    recommandTemp: '推奨温度(25℃)',
+    recommandHumid: '推奨湿度(70%)',
+    asMany: 'だけ',
+    picture: '写真',
+    video: 'ビデオ',
+    showPicture: '写真を見る',
+    showVideo: 'ビデオを見る',
+    addWater: '水分量が不足しています。水をもっと与える必要があります。',
+    upper: '上げる必要があります。',
+    lower: '下げる必要があります。',
     // --------------------------------------------
     // schedule
     mon: '月',
@@ -202,16 +231,21 @@ export const resources = {
     sun: '日',
     on: 'オン',
     off: 'オフ',
+    startTime: '開始時間',
+    endTime: '終了時間',
+    amount: '量',
+    dayOfWeek: '曜日',
+    updateApplied: '修正が適用されました。',
     // --------------------------------------------
     // graph
     tempGraph: '温度グラフ',
-    chooseChart: 'チャート選択',
-    tempChart: '温度チャート',
-    humidChart: '湿度チャート',
-    growChart: '生長チャート',
-    growPredictChart: '生長過程予測チャート',
-    applePricePredictChart: 'リンゴ価格予測チャート',
-    pearPricePredictChart: '梨価格予測チャート',
+    chooseChart: 'グラフ選択',
+    tempChart: '温度グラフ',
+    humidChart: '湿度グラフ',
+    growChart: '生長グラフ',
+    growPredictChart: '生長過程予測グラフ',
+    applePricePredictChart: 'リンゴ価格予測グラフ',
+    pearPricePredictChart: '梨価格予測グラフ',
     temp: '温度',
     humid: '湿度',
     length: '長さ',
@@ -225,6 +259,9 @@ export const resources = {
     lastWeek: '前の週',
     nextWeek: '次の週',
     injectionBasis: '1分当たり : 0.5L 注入基準',
+    irrigationSchedule: '灌水スケジュール',
+    JsonPredictionChart: '価格予測グラフ',
+    JsonPredictionChartTitle: 'トマト価格予測グラフ',
     // --------------------------------------------
     // qna
     write: '投稿',
@@ -241,5 +278,6 @@ export const resources = {
     public: '公開',
     private: '非公開',
     // --------------------------------------------
+    close: '閉じる',
   },
 };

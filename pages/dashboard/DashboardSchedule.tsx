@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLanguageResources } from '@/contexts/LanguageContext';
+import { FaStar } from 'react-icons/fa'; // 별 아이콘을 위한 import
 
 type ScheduleData = {
   sc_id: number;
@@ -25,6 +26,12 @@ type ScheduleData = {
   count: number;
 };
 
+type AIScheduleData = {
+  day: string;
+  time: string;
+  amount: string;
+};
+
 const fetchScheduleData = async (): Promise<ScheduleData[]> => {
   const response = await axios.get<ScheduleData[]>(
     '/json/scheduleMockData.json'
@@ -34,6 +41,7 @@ const fetchScheduleData = async (): Promise<ScheduleData[]> => {
 
 const DashboardSchedule = () => {
   const [scheduleData, setScheduleData] = useState<ScheduleData[]>([]);
+  const [aiSchedule, setAISchedule] = useState<AIScheduleData[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 3;
   const resources = useLanguageResources();
@@ -44,6 +52,22 @@ const DashboardSchedule = () => {
       setScheduleData(data);
     };
     getData();
+  }, []);
+
+  useEffect(() => {
+    // AI 추천 스케쥴 가져오기
+    const fetchAISchedule = async () => {
+      try {
+        const res = await axios.get<{ schedule: AIScheduleData[] }>(
+          '/json/watering_schedule.json'
+        );
+        console.log('Watering_Schedule');
+        setAISchedule(res.data.schedule); // 모든 스케줄을 저장합니다.
+      } catch (error) {
+        console.error('Error fetching AI schedule:', error);
+      }
+    };
+    fetchAISchedule();
   }, []);
 
   const activeSchedules = scheduleData.filter(
@@ -73,7 +97,7 @@ const DashboardSchedule = () => {
     return (
       <div
         key={sc_id}
-        className="mb-4 grid grid-cols-2 gap-2 rounded-lg border border-gray-300 p-4"
+        className="mb-4 grid grid-cols-2 gap-2 rounded-lg border border-gray-300 bg-slate-100 p-4"
       >
         <div className="col-span-2">
           <h4 className="mb-2 text-xl font-semibold">
@@ -89,12 +113,12 @@ const DashboardSchedule = () => {
           </p>
         </div>
         <div>
-          <span className="font-semibold">시작 시간:</span> {hour}
+          <span className="font-semibold">{resources.startTime}:</span> {hour}
           {resources.time} {min}
           {resources.minute}
         </div>
         <div>
-          <span className="font-semibold">종료 시간:</span> {endHour}
+          <span className="font-semibold">{resources.endTime}:</span> {endHour}
           {resources.time} {endMin}
           {resources.minute}
         </div>
@@ -122,6 +146,30 @@ const DashboardSchedule = () => {
     );
   };
 
+  const renderAIScheduleItem = (schedule: AIScheduleData) => {
+    const { day, time, amount } = schedule;
+
+    return (
+      <div className="mb-4 grid grid-cols-2 gap-2 rounded-lg border border-gray-300 bg-slate-100 p-4">
+        <div className="col-span-2">
+          <h4 className="mb-2 text-xl font-semibold">
+            {resources.schedual} - AI
+          </h4>
+        </div>
+        <div className="col-span-2">
+          <p className="mb-2">{day}</p>
+        </div>
+        <div>
+          <span className="font-semibold">{resources.startTime}:</span> {time}
+        </div>
+        <div>
+          <span className="font-semibold">{resources.amount || 'Amount'}:</span>{' '}
+          {amount}
+        </div>
+      </div>
+    );
+  };
+
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -133,7 +181,14 @@ const DashboardSchedule = () => {
 
   return (
     <div className="my-4">
-      {/* <h3 className="mb-4 text-lg font-semibold">동작 중인 스케줄</h3> */}
+      {/* AI 스케쥴 별 아이콘과 함께 보여주기 */}
+      {aiSchedule.map((schedule, index) => (
+        <div key={index} className="mb-4 flex items-center">
+          <FaStar className="mr-2 text-yellow-500" /> {/* 별 아이콘 */}
+          {renderAIScheduleItem(schedule)}
+        </div>
+      ))}
+
       {currentSchedules.length > 0 ? (
         currentSchedules.map((schedule) => renderScheduleItem(schedule))
       ) : (

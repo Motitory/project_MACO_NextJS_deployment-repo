@@ -1,5 +1,6 @@
 // import { LogData } from '@/pages/old_boards/interface/logData';
 // import { Line } from 'react-chartjs-2';
+import Image from 'next/image';
 import { Bar } from 'react-chartjs-2';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -83,6 +84,11 @@ const DashboardOperationHistory = () => {
     isLoading,
     isError,
   } = useQuery<OperationTimesByDay>('operationLog', fetchLogs);
+
+  const [selectedDate, setSelectedDate] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showContent, setShowContent] = useState('video'); // photo 또는 video
+
   const resources = useLanguageResources();
   const currentLocal = resources.lang == 'ko' ? ko : ja;
 
@@ -144,6 +150,26 @@ const DashboardOperationHistory = () => {
     Math.floor((startDay.getDate() - 1) / 7) + 1
   }${resources.week}`; // 주 정보를 문자열로 변환합니다.
 
+  // 모달창을 닫는 함수
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleBarClick = (event: any, array: any) => {
+    if (array.length > 0) {
+      // 클릭한 막대가 있을 경우
+      const index = array[0].index; // 클릭한 막대의 인덱스를 가져옵니다.
+      const datasetIndex = array[0].datasetIndex; // 클릭한 막대의 데이터셋 인덱스를 가져옵니다.
+
+      const clickedDate = eachDayOfTheWeek[index];
+      const formattedDate = format(clickedDate, 'yyyy-MM-dd');
+
+      setSelectedDate(formattedDate);
+
+      setIsModalOpen(true); // 모달을 엽니다.
+    }
+  };
+
   return (
     <div className="container mx-auto px-4">
       {/* <h1 className="mb-4 text-xl font-bold">일별 가동 시간</h1> */}
@@ -187,8 +213,77 @@ const DashboardOperationHistory = () => {
               },
             },
           },
+          onClick: handleBarClick, // 막대를 클릭했을 때의 동작을 설정합니다.
         }}
-      />{' '}
+      />
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-2xl rounded-lg bg-white p-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between">
+              <h2 className="text-2xl font-bold">
+                {selectedDate}{' '}
+                {showContent === 'photo' ? resources.picture : resources.video}
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+              >
+                {resources.close}
+              </button>
+            </div>
+
+            {showContent === 'photo' ? (
+              <div className="my-4">
+                <Image
+                  src="/plant.png"
+                  alt="Farm"
+                  width={640}
+                  height={480}
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <video
+                className="my-4 h-auto w-full" // This will make the video responsive and add vertical margin
+                loop
+                autoPlay
+                controls // It's a good idea to include controls
+              >
+                <source src="/operation_video.mp4" type="video/mp4" />
+              </video>
+            )}
+
+            <div className="mt-4 flex justify-end space-x-2">
+              <button
+                className={`rounded px-4 py-2 ${
+                  showContent === 'photo'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-blue-200'
+                }`}
+                onClick={() => setShowContent('photo')}
+              >
+                {resources.showPicture}
+              </button>
+              <button
+                className={`rounded px-4 py-2 ${
+                  showContent === 'video'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-blue-200'
+                }`}
+                onClick={() => setShowContent('video')}
+              >
+                {resources.showVideo}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

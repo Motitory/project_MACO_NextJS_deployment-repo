@@ -18,7 +18,8 @@ export const useSocketData = <T extends object>(
     socket.addEventListener('message', (message) => {
       try {
         const parsedData = JSON.parse(message.data);
-
+        console.log(parsedData);
+        setData(parsedData);
         if (message.data.includes('Invalid request')) {
           console.error(
             '서버에서 올바르지 않은 요청으로 인식했습니다:',

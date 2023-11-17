@@ -139,7 +139,7 @@ const DashboardManualControl = () => {
                         <Chip
                           label={`${resources.irrigate} 1 : ${
                             currentManualData?.rwtime1 || 0
-                          }분`}
+                          }${resources.minute}`}
                           sx={{
                             backgroundColor: chipColor1,
                             borderColor: chipColor1,
@@ -150,7 +150,7 @@ const DashboardManualControl = () => {
                         <Chip
                           label={`${resources.irrigate} 2 : ${
                             currentManualData?.rwtime2 || 0
-                          }분`}
+                          }${resources.minute}`}
                           sx={{
                             backgroundColor: chipColor2,
                             borderColor: chipColor2,
@@ -165,7 +165,7 @@ const DashboardManualControl = () => {
                             currentManualData?.rctime === 1
                               ? currentManualData?.rcval1
                               : 0
-                          }분`}
+                          }${resources.minute}`}
                           sx={{
                             backgroundColor: chipColor3,
                             borderColor: chipColor3,
@@ -178,7 +178,7 @@ const DashboardManualControl = () => {
                             currentManualData?.rctime === 2
                               ? currentManualData?.rcval2
                               : 0
-                          }분`}
+                          }${resources.minute}`}
                           sx={{
                             backgroundColor: chipColor3,
                             borderColor: chipColor3,

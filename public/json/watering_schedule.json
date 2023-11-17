@@ -1,0 +1,19 @@
+{
+  "schedule": [
+    {
+      "day": "Tuesday",
+      "time": "09:00 AM",
+      "amount": "500mL"
+    },
+    {
+      "day": "Thursday",
+      "time": "10:00 AM",
+      "amount": "600mL"
+    },
+    {
+      "day": "Saturday",
+      "time": "08:30 AM",
+      "amount": "550mL"
+    }
+  ]
+}

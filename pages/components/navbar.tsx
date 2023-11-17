@@ -89,7 +89,7 @@ const NavLink = styled.a`
 
 const LanguageToggle = styled.button<LanguageToggleProps>`
   background-color: ${(props) =>
-    props.language === 'ko' ? '#c7dfe9' : '#f8d7da'};
+    props.language === 'ko' ? '#f8d7da' : '#c7dfe9'};
   color: #898787;
   border: none;
   border-radius: 20px;
@@ -100,7 +100,7 @@ const LanguageToggle = styled.button<LanguageToggleProps>`
 
   &:hover {
     background-color: ${(props) =>
-      props.language === 'ko' ? '#dbeff8' : '#f9e0e3'};
+      props.language === 'ko' ? '#f9e0e3' : '#dbeff8'};
   }
 `;
 
