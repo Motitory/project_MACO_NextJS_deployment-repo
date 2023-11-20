@@ -1,27 +1,29 @@
-# 프로젝트 MACO - 설치 및 실행 가이드
+# 프로젝트 아그리도 - 설치 및 실행 가이드
 
-프로젝트 MACO를 시작하기 위한 단계별 가이드입니다.
+프로젝트 아그리도를 시작하기 위한 단계별 가이드입니다.
 
 ## 1. 웹사이트 접속
 
-먼저, 프로젝트 MACO의 프론트엔드에 접속합니다:
+먼저, "프로젝트 아그리도"의 프론트엔드에 접속합니다:
 
-- [프로젝트 MACO 웹사이트](https://project-maco-next-js-deployment-repo.vercel.app)
+- [프로젝트 아그리도 웹사이트](https://project-maco-next-js-deployment-repo.vercel.app)
 
 ## 2. 백엔드 코드 실행
 
-이제, 프로젝트의 백엔드 코드를 로컬 환경에서 실행합니다. GitHub에서 [프로젝트 MACO 백엔드 리포지토리](https://github.com/Motitory/project_MACO_final-repo)를 클론하여 다음 단계를 진행하세요.
+이제, 프로젝트의 백엔드 코드를 로컬 환경에서 실행합니다. GitHub에서 [프로젝트 아그리도 메인 리포지토리](https://github.com/Motitory/project_MACO_final-repo)를 클론하여 다음 단계를 진행하세요.
 
 ### 2-1. 백엔드 설치 및 실행 방법
+0. **backend 폴더로 이동**:
+  cd backend
 
-1. **의존성 설치**:
-npm i
+2. **의존성 설치**:
+  npm i
 
-2. **빌드**:
-nest build
+3. **빌드**:
+  nest build
 
-3. **서버 시작**:
-nest start
+4. **서버 시작**:
+  nest start
 
 ## 3. 로그인
 
@@ -30,4 +32,4 @@ nest start
 
 ---
 
-이 가이드는 프로젝트 MACO의 기본적인 시작 방법을 설명합니다. 추가적인 설정이나 상세한 안내가 필요한 경우, 프로젝트 문서나 관리자에게 문의하세요.
+이 가이드는 "프로젝트 아그리도"의 기본적인 시작 방법을 설명합니다. 추가적인 설정이나 상세한 안내가 필요한 경우, 프로젝트 문서나 관리자에게 문의하세요.
