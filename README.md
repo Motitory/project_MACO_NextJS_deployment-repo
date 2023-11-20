@@ -14,16 +14,16 @@
 
 ### 2-1. 백엔드 설치 및 실행 방법
 0. **backend 폴더로 이동**:
-  cd backend
+  ```cd backend```
 
 2. **의존성 설치**:
-  npm i
+  ```npm i```
 
 3. **빌드**:
-  nest build
+  ```nest build```
 
 4. **서버 시작**:
-  nest start
+  ```nest start```
 
 ## 3. 로그인
 
